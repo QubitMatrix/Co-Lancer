@@ -1,5 +1,5 @@
 import './App.css';
-import React from 'react'
+import React, {useState} from 'react'
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 
 //main function called at runtime
@@ -12,7 +12,7 @@ function App()
     {
       return (
         <div id="home">
-          <div>Colancer</div>
+          <h3>Colancer</h3>
           <button id="reg_button" onClick={()=>document.location="/register"}>Register</button>
           <button id="login_button" onClick={()=>document.location="/login"}>Login</button>
         </div>
@@ -20,36 +20,87 @@ function App()
     }
   }
 
-  //User registration page
-  class Register extends React.Component
+   //User registration page
+  function RegistrationForm()
   {
-    render()
-    {
-      return (
-        <div>
-          <h1>Register</h1>
-          <form id="reg_form">
-            <label className='reg_label'>Name</label> <input id="name" className="reg_input" type="text" name="name" required></input><br/>
-            <label className='reg_label'>Email ID</label> <input id="email_id" className="reg_input" type="email" name="email_id" required></input><br/>
-            <label className='reg_label'>Password</label> <input id="password" className="reg_input" type="password" name="password" required></input><br/>
-            <label className='reg_label'>Username</label> <input id="username" className="reg_input" type="text" name="username" required></input><br/>
-            <label className='reg_label'>Are you a: </label><br/>
-            <input id="user_type_1" type="radio" name="user_type" value="Freelancer" onClick={()=>document.location="/reg_freelancer"}></input>
-            <label for="user_type_1">Freelancer</label><br/>
-            <input id="user_type_2" type="radio" name="user_type" value="Client" onClick={()=>document.location="/reg_client"}></input>
-            <label for="user_type_2">Client</label><br/>
-          </form>
-        </div>
-      )
+    //handle form inputs
+    const [inputs, setInputs] = useState({})
+
+    const handleChange = (e) => {
+      e.preventDefault(); //prevents page refreshing after form submission
+      const {name, value} = e.target //destructuring assignment to extract name and value from target DOM element
+      setInputs({...inputs, [name]:value})
+      console.log(name+" "+value)
     }
+
+    const handleSubmit = async(e) => {
+      e.preventDefault()
+      console.log("Form submitted")
+      console.log("inputs"+JSON.stringify(inputs))
+
+      const serverUrl = "http://localhost:3000/register_user" //server endpoint to handle form inputs
+
+      console.log("a")
+      try 
+      {
+        console.log("b")
+        const response = await fetch(serverUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(inputs),
+        })
+
+        console.log("x")
+        console.log(response)
+        if(response.ok)
+        {
+          console.log("successfully submitted")
+        }
+        else
+        {
+          console.log("didn't submit")
+        }
+        document.location="/reg_" + inputs['usertype'] + "?username=" + inputs['username'] //once user form submitted open the next form based on user-type, username passed to link the next form details to the user
+      }
+      catch(err)
+      { 
+        console.error(err)
+      }
+    }
+  
+    return (
+      <div>
+        <h1>Register</h1>
+        <form id="reg_form" onSubmit={handleSubmit}>
+          <label className='reg_label'>Name</label> &nbsp;
+          <input id="name" className="reg_input" type="text" name="person_name" value={inputs.person_name} onBlur={handleChange} required /> <br/>
+          <label className='reg_label'>Email ID</label> &nbsp;
+          <input id="email_id" className="reg_input" type="email" name="email" value={inputs.email} onBlur={handleChange} required /> <br/>
+          <label className='reg_label'>Password</label> &nbsp;
+          <input id="password" className="reg_input" type="password" name="password" value={inputs.password} onBlur={handleChange} required /> <br/>
+          <label className='reg_label'>Username</label> &nbsp;
+          <input id="username" className="reg_input" type="text" name="username" value={inputs.username} onBlur={handleChange} required /> <br/>
+          <label className='reg_label'>Are you a: </label> <br/>
+          <input id="user_type_1" type="radio" name="usertype" value="Freelancer" checked={inputs['usertype']==="Freelancer"} onClick={handleChange} />
+          <label htmlFor="user_type_1">Freelancer</label> <br/>
+          <input id="user_type_2" type="radio" name="usertype" value="Client" checked={inputs['usertype']==="Client"} onClick={handleChange} />
+          <label htmlFor="user_type_2">Client</label> <br/>
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+    )
   }
+  
 
   //Registration page extension, for freelancer
-  class Register_freelancer extends React.Component
+  class RegisterFreelancer extends React.Component
   {
     /*del_education=()=>{
       console.log("val")
     }*/
+    
     add_education=()=>{
       //extract values from input fields
       const degree_val=document.getElementById("degree").value
@@ -149,22 +200,68 @@ function App()
   }
 
   //Registration page extension, for client
-  class Register_client extends React.Component
+  function RegisterClient()
   {
-    render()
-    {
+    
+    const searchParams = new URLSearchParams(window.location.search) //extract search parameters from URL
+    const username = searchParams.get('username') //extract username
+
+    //handle form inputs
+    const [inputs, setInputs] = useState({})
+    inputs['username'] = username
+
+    const handleChange = (e) => {
+      e.preventDefault();
+      const {name, value}=e.target
+      setInputs({...inputs,[name]:value})
+    }
+
+    const handleSubmit = async(e) => {
+      e.preventDefault()
+      console.log("Form submitted")
+      console.log("inputs"+JSON.stringify(inputs))
+
+      const serverUrl = "http://localhost:3000/register_client" 
+
+      try
+      {
+        const response = await fetch(serverUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(inputs),
+        })
+
+        if(response.ok)
+        {
+          console.log("successfully submitted")
+        }
+        else 
+        {
+          console.log("didn't submit")
+        }
+      }
+      catch(err)
+      {
+        console.error(err)
+      }
+    }
+
       return (
         <div>
           <h1>Client</h1>
-          <form id="reg_c_form">
-            <label className="reg_c_label">Country</label><input id="country_c" className="reg_c_input" type="text" name="country_c"></input><br/>
-            <label className="reg_c_label">Company</label><input id="company" className="reg_c_input" type="text" name="company"></input><br/>
-            <input className="submit_button" type="submit" name="submit" value="Submit"></input>
+          <form id="reg_c_form" onSubmit={handleSubmit}>
+            <label className="reg_c_label">Country</label> &nbsp;
+            <input id="country_c" className="reg_c_input" type="text" name="country" value={inputs.country} onBlur={handleChange} /> <br/>
+            <label className="reg_c_label">Company</label> &nbsp;
+            <input id="company" className="reg_c_input" type="text" name="company" value={inputs.company} onBlur={handleChange} required /> <br/>
+            <button className="submit_button" type="submit">Submit</button>
           </form>
         </div>
       )
     }
-  }
+  
 
   //Main return which renders, calls and routes the components on running npm start
   return (
@@ -172,9 +269,9 @@ function App()
       <Router>
         <Routes>
           <Route exact path="/" element={<Home></Home>}></Route>
-          <Route path="/register" element={<Register></Register>}></Route>
-          <Route path="/reg_freelancer" element={<Register_freelancer></Register_freelancer>}></Route>
-          <Route path="/reg_client" element={<Register_client></Register_client>}></Route>
+          <Route path="/register" element={<RegistrationForm></RegistrationForm>}></Route>
+          <Route path="/reg_freelancer" element={<RegisterFreelancer></RegisterFreelancer>}></Route>
+          <Route path="/reg_client" element={<RegisterClient></RegisterClient>}></Route>
         </Routes>
       </Router>
    </div>
