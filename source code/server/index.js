@@ -10,6 +10,7 @@ app.use(express.json());
 db_admin = db.db_admin;
 db_client = db.db_client;
 db_freelancer = db.db_freelancer;
+db_user = db.db_user;
 
 //Connecting to the database
 db_client.connect(function(err) {
@@ -163,6 +164,31 @@ app.post("/register_client", (req,res) => {
     });
     res.send({"message":"hello"});
 });
+
+//Route for authentication
+app.post("/authenticate", (req, res) => {
+    const password = req.body.password;
+    const username = req.body.username;
+    db_user.query("SELECT password, user_type FROM users WHERE username='"+username+"';", function(err, result) {
+        if(err) throw err;
+        console.log(result);
+        const stored_password = result.map(row => row.password);
+        const usertype = result.map(row => row.user_type);
+        if(stored_password.length == 0)
+            res.json({"message":"Username not found"});
+        else if(stored_password[0] != password)
+            res.json({"message":"Wrong Password"});
+        else
+        {
+            console.log(usertype[0])
+            if(usertype[0] === "Freelancer")
+                res.json({"message": "Freelancer"}); 
+            if(usertype[0] === "Client")
+                res.json({"message":"Client"});
+        }
+    });
+});
+
 
 //app listening on port 3000
 app.listen(3000,() => {
