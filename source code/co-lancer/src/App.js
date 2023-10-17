@@ -1,6 +1,8 @@
 import './App.css';
 import React, {useState, useEffect} from 'react'
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+//import bcrypt from 'bcryptjs'
+
 
 //main function called at runtime
 function App() 
@@ -12,7 +14,8 @@ function App()
     {
       return (
         <div id="home">
-          <h3>Colancer</h3>
+          <h1>Colancer</h1>
+          <p>Elevate Your Freelance Game With <b>CO-LANCER</b><br/><i>Collaborate To Thrive!!!</i></p>
           <button id="reg_button" onClick={()=>document.location="/register"}>Register</button>
           <button id="login_button" onClick={()=>document.location="/login"}>Login</button>
         </div>
@@ -25,7 +28,7 @@ function App()
   {
     //handle form inputs
     const [inputs, setInputs] = useState({});
-
+    
     const handleChange = (e) => {
       e.preventDefault(); //prevents page refreshing after form submission
       const {name, value} = e.target; //destructuring assignment to extract name and value from target DOM element
@@ -35,8 +38,16 @@ function App()
 
     const handleSubmit = async(e) => {
       e.preventDefault();
-      console.log("Form submitted");
       console.log("inputs"+JSON.stringify(inputs));
+      console.log("Form submitted");
+      
+      //generate unique salt to hash the password 
+      /*const salt = bcrypt.genSaltSync(10);
+      console.log(salt);
+      const hashedpassword = bcrypt.hashSync(inputs["password"], salt);
+      //inputs["password"] = hashedpassword; 
+      console.log("hashed password is "+hashedpassword);
+      alert("Your salt for hashing your password is " + salt + "\nSave this hash and produce it during each login to authenticate");*/
 
       const serverUrl = "http://localhost:3000/register_user"; //server endpoint to handle form inputs
 
@@ -324,21 +335,88 @@ function App()
       }
     }
 
-      return (
-        <div>
-          <h1>Client</h1>
-          <form id="reg_c_form" onSubmit={handleSubmit}>
-            <label className="reg_c_label">Country</label> &nbsp;
-            <input id="country_c" className="reg_c_input" type="text" name="country" value={inputs.country} onChange={handleChange} /> <br/>
-            <label className="reg_c_label">Company</label> &nbsp;
-            <input id="company" className="reg_c_input" type="text" name="company" value={inputs.company} onChange={handleChange} required /> <br/>
-            <button className="submit_button" type="submit">Submit</button>
-          </form>
-        </div>
-      );
-    }
+    return (
+      <div>
+        <h1>Client</h1>
+        <form id="reg_c_form" onSubmit={handleSubmit}>
+          <label className="reg_c_label">Country</label> &nbsp;
+          <input id="country_c" className="reg_c_input" type="text" name="country" value={inputs.country} onChange={handleChange} /> <br/>
+          <label className="reg_c_label">Company</label> &nbsp;
+          <input id="company" className="reg_c_input" type="text" name="company" value={inputs.company} onChange={handleChange} required /> <br/>
+          <button className="submit_button" type="submit">Submit</button>
+        </form>
+      </div>
+    );
+  }
   
 
+  function Login()
+  {
+    //handle inputs
+    const [inputs, setInputs] = useState({});
+
+    const handleChange = (e) => {
+      e.preventDefault();
+      const {name, value}=e.target;
+      setInputs({...inputs,[name]:value});
+    }
+    
+    const handleSubmit = async(e) => {
+      e.preventDefault();
+      console.log("Form submitted");
+      console.log("inputs"+JSON.stringify(inputs));
+
+      const serverUrl = "http://localhost:3000/authenticate"; //url to hit backend and get a response
+
+      try
+      {
+        fetch(serverUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(inputs),
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+
+          //check authentication and redirect to the profile page
+          const message = data["message"];
+          if(message === "Username not found" || message === "Wrong Password")
+          {
+            alert(message);
+            document.location = "/login";
+          }
+          else if(message === "Freelancer" || message === "Client")
+          {
+            alert("Successfully logged in");
+            document.location = "/" + message + "_profile?username=" + inputs["username"];
+          }
+        });        
+      }
+      catch(err)
+      {
+        console.error(err);
+      }
+    }
+
+    //Page rendered at login
+    return(
+      <div id="login">
+        <h3>Login Page</h3>
+        <form id="login_form" onSubmit={handleSubmit}>
+          <label className='reg_label'>Username</label> &nbsp;
+          <input id="login-username" className="reg_input" type="text" name="username" value={inputs.username} onChange={handleChange} required /> <br/>      
+          <label className='reg_label'>Password</label> &nbsp;
+          <input id="login-password" className="reg_input" type="password" name="password" value={inputs.password} onChange={handleChange} required /> <br/>
+          <button className="login_button" type="submit">Login</button>
+        </form>
+      </div>
+    )
+  }
+
+  
   //Main return which renders, calls and routes the components on running npm start
   return (
     <div>
@@ -348,6 +426,7 @@ function App()
           <Route path="/register" element={<RegistrationForm></RegistrationForm>}></Route>
           <Route path="/reg_freelancer" element={<RegisterFreelancer></RegisterFreelancer>}></Route>
           <Route path="/reg_client" element={<RegisterClient></RegisterClient>}></Route>
+          <Route path="/login" element={<Login></Login>}></Route>
         </Routes>
       </Router>
    </div>
