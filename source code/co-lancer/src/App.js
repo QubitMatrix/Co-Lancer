@@ -1,7 +1,7 @@
 import './App.css';
 import React, {useState, useEffect} from 'react'
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
-//import bcrypt from 'bcryptjs'
+import bcrypt from 'bcryptjs'
 
 
 //main function called at runtime
@@ -23,7 +23,7 @@ function App()
     }
   }
 
-   //User registration page
+  //User registration page
   function RegistrationForm()
   {
     //handle form inputs
@@ -42,12 +42,12 @@ function App()
       console.log("Form submitted");
       
       //generate unique salt to hash the password 
-      /*const salt = bcrypt.genSaltSync(10);
+      const salt = bcrypt.genSaltSync(10);
       console.log(salt);
       const hashedpassword = bcrypt.hashSync(inputs["password"], salt);
-      //inputs["password"] = hashedpassword; 
+      inputs["password"] = hashedpassword; 
       console.log("hashed password is "+hashedpassword);
-      alert("Your salt for hashing your password is " + salt + "\nSave this hash and produce it during each login to authenticate");*/
+      alert("Your salt for hashing your password is " + salt);
 
       const serverUrl = "http://localhost:3000/register_user"; //server endpoint to handle form inputs
 
@@ -69,7 +69,7 @@ function App()
         {
           console.log("didn't submit");
         }
-        document.location = "/reg_" + inputs['usertype'] + "?username=" + inputs['username']; //once user form submitted open the next form based on user-type, username passed to link the next form details to the user
+        document.location = "/register_" + inputs['usertype'] + "?username=" + inputs['username']; //once user form submitted open the next form based on user-type, username passed to link the next form details to the user
       }
       catch(err)
       { 
@@ -361,6 +361,7 @@ function App()
       setInputs({...inputs,[name]:value});
     }
     
+    
     const handleSubmit = async(e) => {
       e.preventDefault();
       console.log("Form submitted");
@@ -424,8 +425,8 @@ function App()
         <Routes>
           <Route exact path="/" element={<Home></Home>}></Route>
           <Route path="/register" element={<RegistrationForm></RegistrationForm>}></Route>
-          <Route path="/reg_freelancer" element={<RegisterFreelancer></RegisterFreelancer>}></Route>
-          <Route path="/reg_client" element={<RegisterClient></RegisterClient>}></Route>
+          <Route path="/register_freelancer" element={<RegisterFreelancer></RegisterFreelancer>}></Route>
+          <Route path="/register_client" element={<RegisterClient></RegisterClient>}></Route>
           <Route path="/login" element={<Login></Login>}></Route>
         </Routes>
       </Router>

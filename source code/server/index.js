@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs');
 const express = require('express');
 const db = require("./config/db.js");
 const cors = require('cors');
@@ -31,6 +32,7 @@ app.post("/register_user", (req,res) => {
     const username = req.body.username;
     const usertype = req.body.usertype;
 
+
     const split_name = person_name.split(" ");
     const first_name = split_name[0];
     var last_name = 'NULL';
@@ -41,11 +43,6 @@ app.post("/register_user", (req,res) => {
     if(middle.length != 0) 
         middle_name = middle.join(" ");
 
-    var db_user;
-    if(usertype === "Freelancer")
-        db_user = db_freelancer;
-    else
-        db_user = db_client;
     console.log(person_name + " " + email_id + " " + password + " " + username + " " + usertype);
 
     //Running the insert query on the database
@@ -176,15 +173,22 @@ app.post("/authenticate", (req, res) => {
         const usertype = result.map(row => row.user_type);
         if(stored_password.length == 0)
             res.json({"message":"Username not found"});
-        else if(stored_password[0] != password)
-            res.json({"message":"Wrong Password"});
-        else
+        else 
         {
-            console.log(usertype[0])
-            if(usertype[0] === "Freelancer")
-                res.json({"message": "Freelancer"}); 
-            if(usertype[0] === "Client")
-                res.json({"message":"Client"});
+            //compare if the password entered on hashing gives the hashed-password stored in the database 
+            bcrypt.compare(password, stored_password[0])
+            .then( match => { 
+                if(! match) 
+                    res.json({"message": "Wrong Password"});
+                else
+                {
+                    console.log(usertype[0])
+                    if(usertype[0] === "Freelancer")
+                        res.json({"message": "Freelancer"}); 
+                    if(usertype[0] === "Client")
+                        res.json({"message":"Client"});
+                }
+            });
         }
     });
 });
