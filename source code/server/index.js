@@ -63,7 +63,8 @@ app.post("/register_freelancer", (req,res) => {
     var skills = req.body.skills;
     var socials = req.body.socials;
     educations=JSON.parse(educations);
-    skills=JSON.parse(skills);
+    if(skills)
+        skills=JSON.parse(skills);
     socials=JSON.parse(socials);
     
     //Read freelancer_count from counter to fix a freelancer_id and increment freelancer_count
@@ -102,12 +103,15 @@ app.post("/register_freelancer", (req,res) => {
         
         //Group all the skill details and form a query
         temp="";
-        for (let i=0;i<skills.length;i++)
+        if(skills)
         {
-            temp += "('FID" + freelancer_count + "', '" + skills[i]["skill"] + "', '" + skills[i]["experience"] + "'),";
+            for (let i=0;i<skills.length;i++)
+            {
+                temp += "('FID" + freelancer_count + "', '" + skills[i]["skill"] + "', '" + skills[i]["experience"] + "'),";
+            }
+            insert_query = "INSERT INTO freelancer_skills VALUES " + temp.slice(0,temp.length-1) + ";";
         }
-        insert_query = "INSERT INTO freelancer_skills VALUES " + temp.slice(0,temp.length-1) + ";";
-        
+
         //Execute the query to insert skill details
         db_freelancer.query(insert_query, function(err,result) {
             if(err) throw err;
@@ -193,6 +197,50 @@ app.post("/authenticate", (req, res) => {
     });
 });
 
+//Route for sending freelancer profile details
+app.post("/freelancer_profile", (req, res) => {
+    const username = req.body.username; 
+    
+    //Retrieve skills based on username
+    var retrieve_query = "SELECT skill, experience FROM freelancer LEFT JOIN freelancer_skills USING (freelancer_id) WHERE username='" + username +"';";
+    db_client.query(retrieve_query, function(err, result) {
+        if(err) throw err;
+        var skills = result.map(row => [row.skill, row.experience]);
+        
+        //Retrieve socials based on username
+        retrieve_query = "SELECT media, userhandle FROM freelancer LEFT JOIN freelancer_socials USING (freelancer_id) WHERE username='" + username + "';";
+        db_client.query(retrieve_query, function(err, result) {
+            if(err) throw err;
+            var socials = result.map(row => [row.media, row.userhandle]);
+
+            //Retrieve cookie based on username
+            retrieve_query = "SELECT cookies FROM freelancer WHERE username='" + username + "';";
+            db_client.query(retrieve_query, function(err, result) {
+                if(err) throw err;
+                var cookies = result.map(row => [row.cookies]);
+
+                //Retrieve project details for projects completed by given freelancer
+                retrieve_query = "SELECT DISTINCT project_id, status, title, description FROM (SELECT * FROM project JOIN project_freelancers USING (project_ID)) AS a JOIN freelancer USING (freelancer_id) WHERE username='" + username + "' and status='Completed';";
+                db_client.query(retrieve_query, function(err, result) {
+                    if(err) throw err;
+                    var completed_projects = result.map(row => [row.project_ID, row.status, row.title, row.description]);
+                    console.log(completed_projects);
+
+                    //Retrieve project details for current projects under freelancer
+                    retrieve_query = "SELECT DISTINCT project_id, status, title, description FROM (SELECT * FROM project JOIN project_freelancers USING (project_ID)) AS a JOIN freelancer USING (freelancer_id) WHERE username='" + username + "' and status='In Progress';";
+                    db_client.query(retrieve_query, function(err, result) {
+                        if(err) throw err;
+                        var current_projects = result.map(row => [row.project_ID, row.status, row.title, row.description]);
+                        console.log(current_projects);
+
+                        //Send a JSON formatted payload containing all profile details 
+                        res.json({"skills": skills, "socials": socials, "cookies": cookies, "completed_projects": completed_projects, "current_projects": current_projects});
+                    });
+                });
+            });
+        });
+    });
+});
 
 //app listening on port 3000
 app.listen(3000,() => {
