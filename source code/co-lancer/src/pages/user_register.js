@@ -58,7 +58,8 @@ function RegistrationForm()
   
     return (
       <div>
-        <h1>Register</h1>
+        <h1 className='text-4xl text-center pt-9'>Register</h1>
+        <div className='reg_div'>
         <form id="reg_form" onSubmit={handleSubmit}>
           <label className='reg_label'>Name</label> &nbsp;
           <input id="name" className="reg_input" type="text" name="person_name" value={inputs.person_name} onChange={handleChange} required /> <br/>
@@ -70,11 +71,12 @@ function RegistrationForm()
           <input id="username" className="reg_input" type="text" name="username" value={inputs.username} onChange={handleChange} required /> <br/>
           <label className='reg_label'>Are you a: </label> <br/>
           <input id="user_type_1" type="radio" name="usertype" value="Freelancer" checked={inputs['usertype']==="Freelancer"} onClick={handleChange} />
-          <label htmlFor="user_type_1">Freelancer</label> <br/>
+          <label className='reg_label' htmlFor="user_type_1">Freelancer</label> <br/>
           <input id="user_type_2" type="radio" name="usertype" value="Client" checked={inputs['usertype']==="Client"} onClick={handleChange} />
-          <label htmlFor="user_type_2">Client</label> <br/>
-          <button type="submit">Submit</button>
+          <label className='reg_label' htmlFor="user_type_2">Client</label> <br/> <br/>
+          <button className='button' type="submit">Submit</button>
         </form>
+        </div>
       </div>
     );
 }
