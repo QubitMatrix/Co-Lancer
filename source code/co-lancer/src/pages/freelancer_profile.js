@@ -1,6 +1,6 @@
 import '../App.css';
 import React, {useState, useEffect} from 'react'
-
+import { Link } from 'react-router-dom';
 
 //Freelancer profile page
 function FreelancerProfile()
@@ -86,11 +86,11 @@ function FreelancerProfile()
       console.log("abc"+socials_arr);
     }
 
-    //Combine all the completed projects and insert into an unordered list
-    const aggregate_completed_projects = () => {
+    //Combine all the current and completed projects and insert into unordered lists
+    const aggregate_projects = () => {
       if(profile !== null)
       {
-        var projects = profile.completed_projects;
+        var projects = profile.projects;
         console.log(projects);
       } 
       else
@@ -99,32 +99,17 @@ function FreelancerProfile()
       }
       for(let i=0;i<projects.length;i++)
       {
-        completed_projects_arr.push(<li>{projects[i][0]} - {projects[i][1]} - {projects[i][2]} - {projects[i][3]}</li>);
-      }
-    }
-
-    //Combine all the current projects and insert into an unordered list
-    const aggregate_current_projects = () => {
-      if(profile !== null)
-      {
-        var projects = profile.current_projects;
-        console.log(projects);
-      } 
-      else
-      {
-        projects = [];
-      }
-      for(let i=0;i<projects.length;i++)
-      {
-        current_projects_arr.push(<li>{projects[i][0]} - {projects[i][1]} - {projects[i][2]} - {projects[i][3]}</li>);
+        if(projects[i][3] === 'Completed')
+          completed_projects_arr.push(<li>{projects[i][0]} - {projects[i][1]} - {projects[i][2]} - {projects[i][3]}</li>);
+        else
+          current_projects_arr.push(<li>{projects[i][0]} - {projects[i][1]} - {projects[i][2]} - {projects[i][3]}</li>);
       }
     }
 
     //call the functions to form the lists
     aggregate_skills();
     aggregate_socials();
-    aggregate_completed_projects();
-    aggregate_current_projects();
+    aggregate_projects();
 
     //Page rendered on freelancer profile
     return (
@@ -151,8 +136,9 @@ function FreelancerProfile()
             {current_projects_arr}
           </div>
         </div>
-        <button id="monthly_recap" onClick={() => document.location="/monthly_recap?username="+username}>Monthly Projects Recap</button>
-        <button id="reviews" onClick={() => document.location="/reviews?username="+username}>Reviews and Feedback</button>
+        <Link className="Link" id="monthly_recap" to={`/monthly_recap`} state={{"f_id":profile !==null? profile.freelancer_id : ""}}>Monthly Projects Recap</Link>
+        <Link className="Link" id="reviews" to={`/reviews`} state={{"f_id":profile !== null? profile.freelancer_id : ""}}>Reviews and Feedback</Link> 
+        <Link className="Link" id="view_projects" to ={`/projects`} state={{"f_id":profile !== null? profile.freelancer_id : ""}}>Explore Projects</Link>
       </div>
     );
 }
