@@ -6,6 +6,10 @@ import RegisterFreelancer from './pages/freelancer_registration';
 import RegisterClient from './pages/client_registration';
 import Login from './pages/login';
 import FreelancerProfile from './pages/freelancer_profile';
+import ClientProfile from './pages/client_profile';
+import Review from './pages/review';
+import ProjectPage from './pages/projects';
+import ProjectDetails from './pages/project_details';
 
 //main function called at runtime
 function App() 
@@ -39,8 +43,11 @@ function App()
           <Route path="/register_client" element={<RegisterClient></RegisterClient>}></Route>
           <Route path="/login" element={<Login></Login>}></Route>
           <Route path="/freelancer_profile" element={<FreelancerProfile></FreelancerProfile>}></Route>
+          <Route path="/client_profile" element={<ClientProfile></ClientProfile>}></Route>
           <Route path="/monthly_recap" element={<FreelancerProfile></FreelancerProfile>}></Route>
-          <Route path="/reviews" element={<FreelancerProfile></FreelancerProfile>}></Route>
+          <Route path="/reviews" element={<Review></Review>}></Route>
+          <Route path="/projects" element={<ProjectPage></ProjectPage>}></Route>
+          <Route path="/project_details" element={<ProjectDetails></ProjectDetails>}></Route>
         </Routes>
       </Router>
    </div>
