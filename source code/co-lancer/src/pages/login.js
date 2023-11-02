@@ -57,14 +57,17 @@ function Login()
     //Page rendered at login
     return(
       <div id="login">
-        <h3>Login Page</h3>
-        <form id="login_form" onSubmit={handleSubmit}>
-          <label className='reg_label'>Username</label> &nbsp;
-          <input id="login-username" className="reg_input" type="text" name="username" value={inputs.username} onChange={handleChange} required /> <br/>      
-          <label className='reg_label'>Password</label> &nbsp;
-          <input id="login-password" className="reg_input" type="password" name="password" value={inputs.password} onChange={handleChange} required /> <br/>
-          <button className="login_button" type="submit">Login</button>
-        </form>
+        <h3 className='text-4xl pt-9 font-bold place-self-center text-center'>Log In</h3>
+        <div className='form_div'>
+          <form id="login_form" onSubmit={handleSubmit}>
+            <label className='reg_label'>Username</label> &nbsp; <br/>
+            <input id="login-username" className="reg_input" type="text" name="username" value={inputs.username} onChange={handleChange} required /> <br/> <br/>     
+            <label className='reg_label'>Password</label> &nbsp; <br/>
+            <input id="login-password" className="reg_input" type="password" name="password" value={inputs.password} onChange={handleChange} required /> <br/> <br/> 
+            <br/> 
+            <button className="button" id ="b_login" type="submit">Log In</button>
+          </form>
+        </div>
       </div>
     )
 }
