@@ -20,12 +20,15 @@ function App()
     render()
     {
       return (
-        <div id="home">
-          <h1>Colancer</h1>
+        <div className='grid grid-cols-1 gap-4 place-items-center pt-44' id="home">
+          <h3 className='text-4xl font-bold place-self-center'>Colancer</h3>
           <p>Elevate Your Freelance Game With <b>CO-LANCER</b><br/><i>Collaborate To Thrive!!!</i></p>
-          <button id="reg_button" onClick={()=>document.location="/register"}>Register</button>
-          <button id="login_button" onClick={()=>document.location="/login"}>Login</button>
+          <div className='grid grid-cols-2 gap-4 place-items-center pt-10'>
+            <button className='button' id="reg_button" onClick={()=>document.location="/register"}>Register</button>
+            <button className='button' id="login_button" onClick={()=>document.location="/login"}>Login</button>
+          </div>
         </div>
+
       )
     }
   }
