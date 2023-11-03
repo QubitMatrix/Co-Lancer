@@ -1,18 +1,18 @@
 const bcrypt = require('bcryptjs');
 const express = require('express');
 const db = require("./config/db.js");
-const PDFParser = require('pdf-parse');
 const multer = require('multer');
 const cors = require('cors');
 
 const app = express();
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+const upload = multer({ storage });
 
 const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 
+//Database users 
 db_admin = db.db_admin;
 db_client = db.db_client;
 db_freelancer = db.db_freelancer;
@@ -23,6 +23,7 @@ db_client.connect(function(err) {
     if(err) throw err;
     console.log("connected to database");
 });
+
 
 //Route for /
 app.get("/", (req,res) => {
@@ -235,14 +236,12 @@ app.post("/freelancer_profile", (req, res) => {
         project_descs = project_descs[0]? project_descs[0].split(",") : [];
         project_statuses = project_statuses[0]? project_statuses[0].split(",") : [];
 
-        
         function zip(arrays) {
             return arrays[0].map(function(_,i) {
                 return arrays.map(function(array){return array[i]})
             });
         }
 
-        
         const skill_experience = zip([skills, experiences]) //zip skiils to corresponding experiences
         const social_userhandle = zip([socials, userhandles]);
         const project_details = zip([project_ids, project_titles, project_descs, project_statuses]);
@@ -255,7 +254,7 @@ app.post("/freelancer_profile", (req, res) => {
 app.post("/client_profile", (req, res) => {
     const username = req.body.username;
 
-    let retrieve_query="SELECT client_id, first_name, middle_name, last_name, company FROM client JOIN users USING(username) WHERE username='"+ username + "';";
+    let retrieve_query="SELECT client_id, first_name, middle_name, last_name, company FROM client JOIN user_client USING(username) WHERE username='"+ username + "';";
     db_client.query(retrieve_query, function(err, result) {
         if(err) throw err;
         let f_name = result.map(row => row.first_name);
@@ -269,7 +268,7 @@ app.post("/client_profile", (req, res) => {
         var name = f_name+" "+m_name+" "+l_name; 
         console.log(name, company);
 
-        retrieve_query = "SELECT project_ID, title, description FROM client JOIN project USING(client_id) WHERE client_id='" + client_id + "';";
+        retrieve_query = "SELECT project_ID, title, description FROM client JOIN project ON client.username=project.client_username WHERE client_id='" + client_id + "';";
         db_client.query(retrieve_query, function(err, result) {
             if(err) throw err;
             let projects = result.map(row => [row.project_ID, row.title, row.description]);
@@ -295,7 +294,6 @@ app.post("/projects", (req, res) => {
         let status = result[0].map(row => row.p_status);
         let budget = result[0].map(row => row.p_budget);
         let timeline = result[0].map(row => row.p_timeline);
-        let req = result[0].map(row => row.p_req);
         let domains = result[0].map(row => row.domains)
         let skills = result[0].map(row => row.skills)
         let freelancers = result[0].map(row => row.freelancers);
@@ -339,7 +337,7 @@ app.post("/join_project", (req, res) => {
 });
 
 
-
+//Route to retrieve reviews for a given freelancer
 app.post("/get_reviews", (req, res) => {
     db_user.query("SELECT freelancer_ID, client_ID, review, rating FROM reviews WHERE freelancer_id='" + req.body.f_id + "';", (err, result) => {
         if(err) throw err;
@@ -353,28 +351,151 @@ app.post("/get_reviews", (req, res) => {
 
 //Client can publish projects
 app.post("/publish", (req, res) => {
-    console.log("publish"+req.body.title);
-    res.send();
+    const username = req.body.username;
+    const skills = req.body.skills.split(",");
+    const domains = req.body.tags.split(",");
+    
+    //Read project_count to generate new p_id
+    db_client.query("SELECT project_count FROM counter", function(err, result) {
+        if(err) throw err;
+        const count_p = result.map(row => row.project_count);
+        var project_count = count_p[0];
+
+        //insert new project details
+        const query = "INSERT into project VALUE('PID" + project_count + "', '" + req.body.title + "', '" + req.body.description+ "', " + req.body.budget + ", 'Not Assigned', " + req.body.timeline + ", '" + username + "', '" + req.body.collab + "');";
+        db_client.query(query, function(err, result) {
+            if(err) throw err;
+            console.log(result);
+
+            //Convert domains string to a query for insertion
+            let list1 = "";
+            for(let i=0;i<domains.length;i++)
+            {
+                list1+="('PID" + count_p +"', '" + domains[i] + "'),";
+            }
+            list1=list1.slice(0,list1.length-1);
+           
+
+            //Convert skills string to a query for insertion
+            let list2 = "";
+            for(let i=0;i<skills.length;i++)
+            {
+                list2+="('PID" + count_p +"', '" + skills[i] + "'),";
+            }
+            list2=list2.slice(0,list2.length-1);
+
+            db_client.query("INSERT INTO project_domains VALUES"+list1+";", function(err, result) {
+                if(err) throw err;
+                console.log(result);
+                
+                db_client.query("INSERT INTO project_skills VALUES"+list2+";", function(err, result) {
+                    if(err) throw err
+                    console.log(result);
+
+                    //Update the project_count if successfully inserted
+                    db_client.query("UPDATE counter SET project_count=project_count+1", function(err,result) {
+                        if(err) throw err;
+                        console.log(result);
+                    });
+                }); 
+            });
+        });
+    });
+    res.send({"message":"hello"});
 });
 
-//Uploading requirement pdf
-app.post("/upload_file", upload.single('pdfFile'), (req, res) => {
-    const pdfBuffer = req.file.buffer;
-    console.log(pdfBuffer.length)
-    const pdfData = new Uint8Array(pdfBuffer);
-  const pdfParser = new PDFParser(pdfData);
 
-  pdfParser.on("pdfParser_dataReady", (pdfData) => {
-    const textContent = pdfData.text;
-    // Handle the extracted text content as needed
-    console.log(textContent);
-    res.status(200).json({ textContent });
+// Define a route for file upload
+app.post('/upload_profile', upload.single('profile_pic'), (req, res) => {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+  
+    //Save image data with username acting as unique id
+    const image = {
+      username: req.body.username,
+      data: req.file.buffer,
+      contentType: req.file.mimetype,
+    };
+ 
+    // Store the image in the MySQL database
+    db_user.query('INSERT INTO image SET ?', image, (err, result) => {
+      if (err) {
+        console.error('Error storing image in MySQL:', err);
+        return res.status(500).json({ error: 'Image upload failed' });
+      }
+      res.json({ message: 'File uploaded successfully' });
+    });
+});
+  
+//Route which retrieves profile picture
+app.get('/display_image/:id', (req, res) => {
+  const imageId = req.params.id;
+
+  db_user.query('SELECT data, contentType FROM image WHERE username = ?', [imageId], (err, result) => {
+    if (err) {
+      console.error('Error retrieving image from MySQL:', err);
+      return res.status(500).json({ error: 'Image retrieval failed' });
+    }
+
+    if (result.length === 0) {
+      return res.status(404).json({ error: 'Image not found' });
+    }
+
+    //Prepare a response with data along with the header having the content-type set
+    const imageData = result[0];
+    res.setHeader('Content-Type', imageData.contentType);
+    res.end(imageData.data);
   });
-
-  pdfParser.parseBuffer(pdfBuffer);
 });
+
+//Route to upload project details pdf into database
+app.post('/upload_pdf', upload.single('pdf'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'No file uploaded' });
+  }
+
+  //Save the pdf data along with title acting as a unique id
+  const pdf = {
+    title: req.body.project_title,
+    data: req.file.buffer,
+    contentType: req.file.mimetype,
+  };
+
+  console.log(req.body.project_title);
+
+  db_client.query('INSERT INTO project_pdf SET ?', pdf, (err, result) => {
+    if (err) {
+      console.error('Error storing PDF in MySQL:', err);
+      return res.status(500).json({ error: 'PDF upload failed' });
+    }
+    res.json({ message: 'PDF uploaded successfully' });
+  });
+});
+
+//Route to retrieve the pdf from database
+app.get('/display_pdf/:id', (req, res) => {
+  const pdfId = req.params.id;
+
+  db_user.query('SELECT data, contentType FROM project_pdf WHERE title = ?', [pdfId], (err, result) => {
+    if (err) {
+      console.error('Error retrieving PDF from MySQL:', err);
+      return res.status(500).json({ error: 'PDF retrieval failed' });
+    }
+
+    if (result.length === 0) {
+      return res.status(404).json({ error: 'PDF not found' });
+    }
+
+    const pdfData = result[0];
+    res.setHeader('Content-Type', pdfData.contentType);
+    res.end(pdfData.data);
+  });
+});
+
 
 //app listening on port 3000
 app.listen(3000,() => {
     console.log(`Server is running on ${PORT}`);
 });
+
