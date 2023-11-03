@@ -121,18 +121,18 @@ function ProjectPage()
             domain_tags.push(<span className="tags">#CollabNow</span>) //add CollabNow tag if needed
 
         //Extract available project and link to detailed project page
-        if(pro[i][3] !== 'Completed')
+        if(pro[i][3] === 'Not Assigned' || (pro[i][3] === 'In Progress' && pro[i][10] === "YES"))
         {
             arr1.push(<div className="project_items">
                 <li>
-                    <Link to={`/project_details?project_id=${pro[i][0]}`} state={{"project": pro[i], "f_id": f_id}}><h3>{pro[i][1]}</h3></Link> 
+                    <Link to={`/project_details`} state={{"project": pro[i], "f_id": f_id}}><h3>{pro[i][1]}</h3></Link> 
                     <p>{pro[i][2]}</p>
                     <div>{domain_tags}</div>
                 </li>
                 <button value={pro[i][0]} id="join" onClick={handleClick}>Join Now</button>
             </div>);
         }
-        
+
         //Extract completed project
         else
         {

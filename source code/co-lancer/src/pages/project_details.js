@@ -1,11 +1,16 @@
 import '../App.css';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 
 //Detailed project view
 function ProjectDetails()
 {
+    //Set up a navigate object for safer routing
+    const navigate = useNavigate();
+
     //Access the states from previous location (in this case project details and freelancer_id from projects page)
     const {state} = useLocation();
+
     const project_state = state["project"];
     const f_id = state["f_id"];
     const p_id = project_state[0]
@@ -60,12 +65,14 @@ function ProjectDetails()
     aggregate(project_state[8]? project_state[8].split(",") : [],skills_arr);
     aggregate(project_state[9]? project_state[9].split(",") : [],freelancers_arr);
 
-
+    
     console.log(domains_arr);
 
     //Page rendered for project_details
     return(<div>
         <h2>{project_state[1]}</h2>
+        <button id="view_pdf" onClick={()=>{navigate("/project_pdf", {state:{title:project_state[1]}})}}>View PDF</button><br/>
+        <button id="join" onClick={handleClick}>Join Now</button>
         <h3>Description</h3>
         <p>{project_state[2]}</p>
         <p><b>Budget</b><br/>{project_state[4]}</p>
@@ -83,7 +90,7 @@ function ProjectDetails()
         <ul>
             <li>{freelancers_arr}</li>
         </ul>
-        <button id="join" onClick={handleClick}>Join Now</button>
+        
     </div>)
 }
 
