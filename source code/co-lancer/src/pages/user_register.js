@@ -1,13 +1,17 @@
 import '../App.css';
 import React, {useState} from 'react'
 import bcrypt from 'bcryptjs'
+import { useNavigate } from 'react-router-dom';
 
 //User registration page
 function RegistrationForm()
 {
     //handle form inputs
     const [inputs, setInputs] = useState({});
-    
+
+    //navigate object
+    const navigate = useNavigate();
+
     const handleChange = (e) => {
       e.preventDefault(); //prevents page refreshing after form submission
       const {name, value} = e.target; //destructuring assignment to extract name and value from target DOM element
@@ -48,7 +52,7 @@ function RegistrationForm()
         {
           console.log("didn't submit");
         }
-        document.location = "/register_" + inputs['usertype'] + "?username=" + inputs['username']; //once user form submitted open the next form based on user-type, username passed to link the next form details to the user
+        navigate("/register_" + inputs['usertype'], {state:{username: inputs['username']}}); //once user form submitted open the next form based on user-type, username passed to link the next form details to the user
       }
       catch(err)
       { 
@@ -65,14 +69,14 @@ function RegistrationForm()
           <input id="name" className="reg_input" type="text" name="person_name" value={inputs.person_name} onChange={handleChange} required /> <br/>
           <label className='reg_label'>Email ID</label> &nbsp;
           <input id="email_id" className="reg_input" type="email" name="email" value={inputs.email} onChange={handleChange} required /> <br/>
-          <label className='reg_label'>Password</label> &nbsp;
-          <input id="password" className="reg_input" type="password" name="password" value={inputs.password} onChange={handleChange} required /> <br/>
           <label className='reg_label'>Username</label> &nbsp;
           <input id="username" className="reg_input" type="text" name="username" value={inputs.username} onChange={handleChange} required /> <br/>
+          <label><abbr className='reg_label' title="Include atleast one lowercase, one uppercase, one digit and one special symbol. Min length 8">Password</abbr></label> &nbsp;
+          <input id="password" className="reg_input" type="password" name="password" value={inputs.password} onChange={handleChange} pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@ # $ ! % &]).{8,}" required /> <br/>
           <label className='reg_label'>Are you a: </label> <br/>
-          <input id="user_type_1" type="radio" name="usertype" value="Freelancer" checked={inputs['usertype']==="Freelancer"} onClick={handleChange} />
+          <input id="user_type_1" type="radio" name="usertype" value="Freelancer" checked={inputs.usertype==="Freelancer"} onClick={handleChange} />
           <label className='reg_label' htmlFor="user_type_1">Freelancer</label> <br/>
-          <input id="user_type_2" type="radio" name="usertype" value="Client" checked={inputs['usertype']==="Client"} onClick={handleChange} />
+          <input id="user_type_2" type="radio" name="usertype" value="Client" checked={inputs.usertype==="Client"} onClick={handleChange} />
           <label className='reg_label' htmlFor="user_type_2">Client</label> <br/> <br/>
           <button className='button' type="submit">Submit</button>
         </form>

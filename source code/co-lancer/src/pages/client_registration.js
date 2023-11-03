@@ -1,15 +1,16 @@
 import '../App.css';
 import React, {useState} from 'react'
+import ImageUpload from './image';
+import { useLocation } from 'react-router-dom';
 
 //Registration page extension, for client
 function RegisterClient()
 {   
-    const searchParams = new URLSearchParams(window.location.search); //extract search parameters from URL
-    const username = searchParams.get('username'); //extract username
-
     //handle form inputs
     const [inputs, setInputs] = useState({});
-    inputs['username'] = username;
+
+    const {state} = useLocation();
+    inputs['username'] = state.username;
 
     const handleChange = (e) => {
       e.preventDefault();
@@ -37,13 +38,16 @@ function RegisterClient()
         if(response.ok)
         {
           console.log("successfully submitted");
-          alert("Registration successful, you will be redirected to the home page");
+          alert("Registration successful,you will now be required to select a profile picture.");
+          
+          //Display file upload
+          const div1 = document.getElementById("upload_profile_placeholder")
+          div1.style.display = "block";
         }
         else 
         {
           console.log("didn't submit");
         }
-        document.location="/"; 
       }
       catch(err)
       {
@@ -60,6 +64,10 @@ function RegisterClient()
           <label className="reg_c_label">Company</label> &nbsp;
           <input id="company" className="reg_c_input" type="text" name="company" value={inputs.company} onChange={handleChange} required /> <br/>
           <button className="submit_button" type="submit">Submit</button>
+          <br/><br/><br/>
+          <div id="upload_profile_placeholder">
+            <ImageUpload username={inputs.username} /> 
+          </div>
         </form>
       </div>
     );

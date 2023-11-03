@@ -1,5 +1,7 @@
 import '../App.css';
 import React, {useState, useEffect} from 'react'
+import ImageUpload from './image';
+import { useLocation } from 'react-router-dom';
 
 //Registration page extension, for freelancer
 function RegisterFreelancer()
@@ -7,15 +9,15 @@ function RegisterFreelancer()
     /*del_education=()=>{
       console.log("val")
     }*/
-    //handle form inputs
-    const searchParams = new URLSearchParams(window.location.search); //extract search parameters from URL
-    const username = searchParams.get('username'); //extract username
-
-
     const [education_details, set_education_details] = useState([]);
     const [skill_details, set_skill_details] = useState([]);
     const [social_details, set_social_details] = useState([]);
     const [inputs, set_inputs] = useState({});
+
+
+    //Access state details from previous component
+    const {state} = useLocation();
+    const username = state.username;
     inputs["username"] = username;
 
     //clear the input fields for next entry
@@ -40,7 +42,6 @@ function RegisterFreelancer()
       e.preventDefault(); //prevents page refreshing after form submission
       const {name, value} = e.target; //destructuring assignment to extract name and value from target DOM element
       set_inputs({...inputs, [name]:value});
-      console.log("x"+name+" "+value);
     }
 
     //handles submission of form and connects to the backend
@@ -67,7 +68,11 @@ function RegisterFreelancer()
         if (response.ok)
         {
           console.log("successfully submitted");
-          alert("Registration successful, you will be redirected to the home page");
+          alert("Registration successful, you will now be required to select a profile picture.");
+          
+          //Display file upload
+          const div1 = document.getElementById("upload_profile_placeholder")
+          div1.style.display = "block";
         }
         else 
         {
@@ -77,8 +82,7 @@ function RegisterFreelancer()
       catch (err) 
       {
         console.error(err);
-      }
-      document.location = "/"
+      }   
     }
 
     const add_education = (e) => {
@@ -154,9 +158,9 @@ function RegisterFreelancer()
     return (
         <div>
           <h1>Freelancer</h1>
-          <form id="reg_f_form" onSubmit={handleSubmit}>
-            <label className='reg_f_label'>Date of Birth</label> <input id="dob" className="reg_f_input" type="date" name="dob" value={inputs.dob} onChange={handleChange} /> <br/>
-            <label className='reg_f_label'>Country</label> <input id="country_f" className="reg_f_input" type="text" name="country" value={inputs.country} onChange={handleChange} /> <br/>
+          <form id="reg_f_form"  onSubmit={handleSubmit}>
+            <label className='reg_f_label'>Date of Birth</label> <input id="dob" className="reg_f_input" type="date" name="dob" value={inputs.dob} onChange={handleChange} required/> <br/>
+            <label className='reg_f_label'>Country</label> <input id="country_f" className="reg_f_input" type="text" name="country" value={inputs.country} onChange={handleChange} required /> <br/>
             <div id="educations">
               <label className='reg_f_label'>Education</label> <input id="degree" className="reg_f_input" type="text" name="degree" placeholder="degree" /> <input id="year_of_grad" className="reg_f_input" type="text" name="year_of_grad" placeholder="year of  graduation" /> <br/>
               <li id="education_list"></li>
@@ -177,8 +181,12 @@ function RegisterFreelancer()
               <label className='reg_f_label'>Social Profile</label> <input id="media" className="reg_f_input" type="text" name="media" placeholder="media" /> <input id="userhandle" className="reg_f_input" type="text" name="userhandle" placeholder="userhandle" /><br/>
               <li id="social_list"></li>
               <button id="add_social" className="add_button" onClick={add_social}>Add Social</button>
-            </div>    
-            <input className="submit_button" type="submit" name="submit" value="Submit" />
+            </div>   
+            <input className="submit_button" type="submit" name="submit" value="Submit"/>
+            <br/><br/><br/>
+            <div id="upload_profile_placeholder">
+              <ImageUpload username={inputs.username} /> 
+            </div>
           </form>
         </div>
     );

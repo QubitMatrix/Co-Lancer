@@ -1,16 +1,18 @@
 import '../App.css';
 import React, {useState, useEffect} from 'react'
 import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import ImageDisplay from './image_display';
 
 //Freelancer profile page
 function FreelancerProfile()
 {
-    //Extract username from the URL
-    const searchParams = new URLSearchParams(window.location.search); //extract search parameters from URL
-    const username = searchParams.get('username'); //extract username
-    
     //set profile page values
     const [profile, setProfile] = useState(null);
+
+    //Access state details from previous component
+    const {state} = useLocation();
+    const username = state["username"];
 
     //Get the freelancer details from backend
     useEffect(() => {
@@ -114,6 +116,7 @@ function FreelancerProfile()
     //Page rendered on freelancer profile
     return (
       <div id="freelancer_profile">
+        <ImageDisplay imageId={username}/>
         <h3>Username: {username}</h3>
         <h4>Skill Set</h4>
         <ul>

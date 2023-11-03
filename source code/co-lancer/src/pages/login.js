@@ -1,11 +1,15 @@
 import '../App.css';
 import React, {useState} from 'react'
+import { useNavigate } from 'react-router-dom';
 
 //Login page for users and authentication
 function Login()
 {
     //handle inputs
     const [inputs, setInputs] = useState({});
+
+    //navigate object
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
       e.preventDefault();
@@ -39,12 +43,12 @@ function Login()
           if(message === "Username not found" || message === "Wrong Password")
           {
             alert(message);
-            document.location = "/login";
+            navigate("/login");
           }
           else if(message === "Freelancer" || message === "Client")
           {
             alert("Successfully logged in");
-            document.location = "/" + message + "_profile?username=" + inputs["username"];
+            navigate("/" + message + "_profile", {state:{username: inputs["username"]}});
           }
         });        
       }
