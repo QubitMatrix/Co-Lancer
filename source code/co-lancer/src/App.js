@@ -10,6 +10,8 @@ import ClientProfile from './pages/client_profile';
 import Review from './pages/review';
 import ProjectPage from './pages/projects';
 import ProjectDetails from './pages/project_details';
+import PdfDisplay from './pages/file_display';
+import CreateProject from './pages/create_project';
 
 //main function called at runtime
 function App() 
@@ -25,8 +27,8 @@ function App()
           <p>Elevate Your Freelance Game With <b>CO-LANCER</b><br/><i>Collaborate To Thrive!!!</i></p>
           <div className='grid grid-cols-2 gap-4 place-items-center pt-10'>
             <button className='button' id="reg_button" onClick={()=>document.location="/register"}>Register</button>
-            <button className='button' id="login_button" onClick={()=>document.location="/login"}>Login</button>
-          </div>
+          <button className='button' id="login_button" onClick={()=>document.location="/login"}>Login</button>
+</div>
         </div>
 
       )
@@ -51,6 +53,8 @@ function App()
           <Route path="/reviews" element={<Review></Review>}></Route>
           <Route path="/projects" element={<ProjectPage></ProjectPage>}></Route>
           <Route path="/project_details" element={<ProjectDetails></ProjectDetails>}></Route>
+          <Route path="/project_pdf" element={<PdfDisplay></PdfDisplay>}></Route>
+          <Route path="/create_project" element={<CreateProject></CreateProject>}></Route>
         </Routes>
       </Router>
    </div>
