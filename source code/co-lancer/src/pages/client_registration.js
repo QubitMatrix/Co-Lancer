@@ -56,19 +56,23 @@ function RegisterClient()
     }
 
     return (
-      <div>
-        <h1>Client</h1>
+      <div className='reg_c_div'>
+        <h1 className='text-4xl text-center pt-4'>Client</h1>
+        <br/>
         <form id="reg_c_form" onSubmit={handleSubmit}>
           <label className="reg_c_label">Country</label> &nbsp;
           <input id="country_c" className="reg_c_input" type="text" name="country" value={inputs.country} onChange={handleChange} /> <br/>
+          <br/>
           <label className="reg_c_label">Company</label> &nbsp;
           <input id="company" className="reg_c_input" type="text" name="company" value={inputs.company} onChange={handleChange} required /> <br/>
+          <br/>
           <button className="submit_button" type="submit">Submit</button>
-          <br/><br/><br/>
+          <br/>
           <div id="upload_profile_placeholder">
-            <ImageUpload username={inputs.username} /> 
+            <ImageUpload  username={inputs.username} /> 
           </div>
         </form>
+        <br/>
       </div>
     );
 }

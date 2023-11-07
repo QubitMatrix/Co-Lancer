@@ -63,7 +63,7 @@ function Review()
 
         for(let i=0;i<client_IDs.length;i++)
         {
-            review_arr.push(<li>{client_IDs[i]} - {reviews[i]} - {ratings[i]}</li>)
+            review_arr.push(<li> <div className='review_card'> <b>{client_IDs[i]} </b> <br/> {reviews[i]} <br/> {ratings[i]} </div></li>)
         }
         console.log("no. of reviews"+review_arr.length)
     }
@@ -73,8 +73,8 @@ function Review()
 
     return( 
         <div id="review">
-            <h1>Reviews</h1>
-            <ul>
+            <h1 className='text-4xl pt-4 pl-5 font-semibold'>Reviews</h1>
+            <ul className='review_box'>
                 {review_arr}
             </ul>
         </div>
