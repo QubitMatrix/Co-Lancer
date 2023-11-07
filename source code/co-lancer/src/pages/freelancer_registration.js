@@ -156,8 +156,9 @@ function RegisterFreelancer()
 
     //Page to be rendered on invoking the RegisterFreelancer component
     return (
-        <div>
-          <h1>Freelancer</h1>
+        <div className='reg_f_div'>
+          <h1 className='text-4xl text-center pt-4'>Freelancer</h1>
+          <div className='f_form_div'>
           <form id="reg_f_form"  onSubmit={handleSubmit}>
             <label className='reg_f_label'>Date of Birth</label> <input id="dob" className="reg_f_input" type="date" name="dob" value={inputs.dob} onChange={handleChange} required/> <br/>
             <label className='reg_f_label'>Country</label> <input id="country_f" className="reg_f_input" type="text" name="country" value={inputs.country} onChange={handleChange} required /> <br/>
@@ -166,6 +167,7 @@ function RegisterFreelancer()
               <li id="education_list"></li>
               <button id="add_education" className="add_button" onClick={add_education}>Add Education</button>
             </div>
+            <br/>
             <div id="skills">
               <label className='reg_f_label'>Skill Set</label> <input id="skill" className="reg_f_input" type="text" name="skill" placeholder="skill" />
               <label for="experience"></label>
@@ -177,17 +179,21 @@ function RegisterFreelancer()
               <li id="skillset_list"></li>
               <button id="add_skill" className="add_button" onClick={add_skill}>Add Skill</button>
             </div>
+            <br/>
             <div id="social_profiles">
               <label className='reg_f_label'>Social Profile</label> <input id="media" className="reg_f_input" type="text" name="media" placeholder="media" /> <input id="userhandle" className="reg_f_input" type="text" name="userhandle" placeholder="userhandle" /><br/>
               <li id="social_list"></li>
               <button id="add_social" className="add_button" onClick={add_social}>Add Social</button>
-            </div>   
+            </div> 
+            <br/>  
             <input className="submit_button" type="submit" name="submit" value="Submit"/>
-            <br/><br/><br/>
+            <br/>
             <div id="upload_profile_placeholder">
               <ImageUpload username={inputs.username} /> 
             </div>
+            <br/>
           </form>
+          </div>
         </div>
     );
 }

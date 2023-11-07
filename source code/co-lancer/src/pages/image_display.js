@@ -26,8 +26,7 @@ function ImageDisplay (props)
   //Sub component that renders the profile image part of profile
   return (
     <div>
-      <h2>Profile Picture</h2>
-      {imageData && <img width="100px" height="100px" src={imageData} alt="Uploaded Image" />}
+      {imageData && <img className='rounded-full' width="100px" height="100px" src={imageData} alt="Uploaded Image" />}
     </div>
   );
 };

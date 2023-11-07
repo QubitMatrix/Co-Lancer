@@ -3,12 +3,14 @@ import React, {useState, useEffect} from 'react'
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import ImageDisplay from './image_display';
+import { useNavigate } from 'react-router-dom';
 
 //Freelancer profile page
 function FreelancerProfile()
 {
     //set profile page values
     const [profile, setProfile] = useState(null);
+    const navigate = useNavigate()
 
     //Access state details from previous component
     const {state} = useLocation();
@@ -116,19 +118,27 @@ function FreelancerProfile()
     //Page rendered on freelancer profile
     return (
       <div id="freelancer_profile">
-        <ImageDisplay imageId={username}/>
-        <h3>Username: {username}</h3>
-        <h4>Skill Set</h4>
-        <ul>
-          {skills_arr}
-        </ul>
-        <h4>Social Accounts</h4>
-        <ul>
-          {socials_arr}
-        </ul>
+        <div className='f_details'>
+        <div className='f_personal'>
+          <ImageDisplay imageId={username}/>
+          <h3>{username}</h3>
+          <h4>Skill Set</h4>
+          <ul>
+            {skills_arr}
+          </ul>
+          <h4>Social Accounts</h4>
+          <ul>
+            {socials_arr}
+          </ul>
+        </div>
+        <div>        
         <h4>Cookie Jar</h4>
         <p>{profile !== null ? profile.cookies : "Loading..."}</p>
-        <button id="chat_button" onClick={() => document.location="/chat"}>Chat</button>
+        <button id="chat_button" onClick={() => navigate("/chat",{state:{username:username}})}>Chat</button>
+        </div>
+        <br/>
+        </div>
+
         <div id="project_gallery">
           <div id="completed_projects">
             <h3>Completed Projects</h3>
@@ -138,10 +148,13 @@ function FreelancerProfile()
             <h3>Current Projects</h3>
             {current_projects_arr}
           </div>
+          <br/>
+          <Link className="Link" id="monthly_recap" to={`/monthly_recap`} state={{"f_id":profile !==null? profile.freelancer_id : ""}}>Monthly Projects Recap</Link>
+          <Link className="Link" id="reviews" to={`/reviews`} state={{"f_id":profile !== null? profile.freelancer_id : ""}}>Reviews and Feedback</Link> 
+          <Link className="Link" id="view_projects" to ={`/projects`} state={{"f_id":profile !== null? profile.freelancer_id : ""}}>Explore Projects</Link>
+          <br/>
         </div>
-        <Link className="Link" id="monthly_recap" to={`/monthly_recap`} state={{"f_id":profile !==null? profile.freelancer_id : ""}}>Monthly Projects Recap</Link>
-        <Link className="Link" id="reviews" to={`/reviews`} state={{"f_id":profile !== null? profile.freelancer_id : ""}}>Reviews and Feedback</Link> 
-        <Link className="Link" id="view_projects" to ={`/projects`} state={{"f_id":profile !== null? profile.freelancer_id : ""}}>Explore Projects</Link>
+        <br/> <br/>
       </div>
     );
 }
