@@ -3,6 +3,7 @@ const express = require('express');
 const db = require("./config/db.js");
 const multer = require('multer');
 const cors = require('cors');
+const validate = require("./validate.js");
 
 const app = express();
 const storage = multer.memoryStorage();
@@ -33,40 +34,59 @@ app.get("/", (req,res) => {
 //Route for posting user registration 
 app.post("/register_user", (req,res) => {
     const person_name = req.body.person_name;
+    console.log(validate.validate_name(person_name));
     const email_id = req.body.email;
+    console.log(validate.validate_email(email_id));
     const password = req.body.password;
+    console.log(validate.validate_password(password));
     const username = req.body.username;
+    console.log(validate.validate_username(username));
     const usertype = req.body.usertype;
 
+    if(!validate.validate_name(person_name) || !validate.validate_email(email_id) || !validate.validate_username(username) || !validate.validate_password(password))
+    {
+        res.send({"Message":"Invalid inputs(Name should contain only letters (maxlength 80), Username should start with letter and have only letters,digits and _ (maxlength 30), Password can only contain letters, digits and @ # $ ! % & (8 to 30 length)"})
+    }
 
-    const split_name = person_name.split(" ");
-    const first_name = split_name[0];
-    const middle = split_name.slice(1,split_name.length-1);
-    var last_name = 'NULL';
-    var middle_name = 'NULL';
- 
-    if(split_name.length > 1)
-        last_name = split_name[split_name.length-1];
-    //handle absence of middle name
-    if(middle.length != 0) 
-        middle_name = middle.join(" ");
+    else
+    {
+        const split_name = person_name.split(" ");
+        const first_name = split_name[0];
+        const middle = split_name.slice(1,split_name.length-1);
+        var last_name = 'NULL';
+        var middle_name = 'NULL';
+    
+        if(split_name.length > 1)
+            last_name = split_name[split_name.length-1];
+        //handle absence of middle name
+        if(middle.length != 0) 
+            middle_name = middle.join(" ");
 
-    //Running the insert query on the database
-    //One query to handle all possible possibilities of first,middle and last name presence
-    const insert_query = "INSERT INTO users(username, email_id, password, first_name, "+ (middle_name === 'NULL'? '':"middle_name, ") + (last_name === 'NULL'? '':"last_name, ") + "user_type) VALUE('" + username + "', '" + email_id + "', '" + password + "', '" + (middle_name === "NULL"? (last_name === "NULL" ? first_name: first_name + "', '" + last_name) : first_name + "', '" + middle_name + "', '" + last_name) + "', '"+ usertype + "');";
-    console.log(insert_query); 
-    db_user.query(insert_query, function(err, result) {
-        if(err) throw err;
-        console.log(result);
-    });
-    res.send({message:"hello"}); //without this no response sent to frontend
+        //Running the insert query on the database
+        //One query to handle all possible possibilities of first,middle and last name presence
+        const insert_query = "INSERT INTO users(username, email_id, password, first_name, "+ (middle_name === 'NULL'? '':"middle_name, ") + (last_name === 'NULL'? '':"last_name, ") + "user_type) VALUE('" + username + "', '" + email_id + "', '" + password + "', '" + (middle_name === "NULL"? (last_name === "NULL" ? first_name: first_name + "', '" + last_name) : first_name + "', '" + middle_name + "', '" + last_name) + "', '"+ usertype + "');";
+        console.log(insert_query); 
+        db_user.query(insert_query, function(err, result) {
+            if(err)
+            {
+                if(err.errno === 1062)
+                {
+                    res.send({"Message":"Username taken"});
+                }
+            } throw err;
+            console.log(result);
+        });
+        res.send({"Message":"User registered"}); //without this no response sent to frontend
+    }
 });
 
 //Route for posting freelancer registration 
 app.post("/register_freelancer", (req, res) => {
     const dob = req.body.dob;
     const country = req.body.country;
+    console.log(validate.validate_letters(country,30));
     const username=req.body.username;
+    console.log(validate.validate_username(username));
     var educations = req.body.educations;
     var skills = req.body.skills;
     var socials = req.body.socials;
@@ -75,72 +95,112 @@ app.post("/register_freelancer", (req, res) => {
         skills=JSON.parse(skills);
     socials=JSON.parse(socials);
     
-    //Read freelancer_count from counter to fix a freelancer_id and increment freelancer_count
-    var freelancer_count;
-    db_freelancer.query("SELECT freelancer_count FROM counter", function(err, result) {
-        if(err) throw err;
-        const count = result.map(row => row.freelancer_count);
-        freelancer_count = count[0];
-
-        //Insert freelancer details into the freelancer table
-        var insert_query = "INSERT INTO freelancer VALUE('FID" + freelancer_count + "', '" + dob + "', '" + country + "', 0, '" + username + "');";
-        db_freelancer.query(insert_query, function(err, result) {
+    if(validate.validate_letters(country,30) && validate.validate_username(username))
+    {
+        //Read freelancer_count from counter to fix a freelancer_id and increment freelancer_count
+        var freelancer_count;
+        db_freelancer.query("SELECT freelancer_count FROM counter", function(err, result) {
             if(err) throw err;
-            console.log(result);
+            const count = result.map(row => row.freelancer_count);
+            freelancer_count = count[0];
 
-            //Update the freelancer_count if successfully inserted
-            db_freelancer.query("UPDATE counter SET freelancer_count = freelancer_count+1", function(err,result) {
+            //Insert freelancer details into the freelancer table
+            var insert_query = "INSERT INTO freelancer VALUE('FID" + freelancer_count + "', '" + dob + "', '" + country + "', 0, '" + username + "');";
+            db_freelancer.query(insert_query, function(err, result) {
                 if(err) throw err;
                 console.log(result);
+
+                //Update the freelancer_count if successfully inserted
+                db_freelancer.query("UPDATE counter SET freelancer_count = freelancer_count+1", function(err,result) {
+                    if(err) throw err;
+                    console.log(result);
+                });
             });
-        });
 
-        //Group all the education details and form a query
-        var temp = "";
-        for (let i=0;i<educations.length;i++)
-        {
-            temp += "('FID" + freelancer_count + "', '" + educations[i]["degree"] + "', " + educations[i]["year_of_grad"] + "),";
-        }
-        insert_query = "INSERT INTO freelancer_educations VALUES " + temp.slice(0,temp.length-1) + ";";
-        
-        //Execute the query to insert education details
-        db_freelancer.query(insert_query, function(err,result) {
-            if(err) throw err;
-            console.log(result);
-        });
-        
-        //Group all the skill details and form a query
-        temp="";
-        if(skills)
-        {
-            for (let i=0;i<skills.length;i++)
+            //Group all the education details and form a query
+            var temp = "";
+            for (let i=0;i<educations.length;i++)
             {
-                temp += "('FID" + freelancer_count + "', '" + skills[i]["skill"] + "', '" + skills[i]["experience"] + "'),";
+                console.log(validate.validate_alphanumeric(educations[i]["degree"],30) +" " + validate.validate_year(educations[i]["year_of_grad"]));
+                if(validate.validate_alphanumeric(educations[i]["degree"],30) && validate.validate_year(educations[i]["year_of_grad"]))
+                {
+                    temp += "('FID" + freelancer_count + "', '" + educations[i]["degree"] + "', " + educations[i]["year_of_grad"] + "),";     
+                }
+                else
+                {
+                    res.send({"Message":"Degree should be only alphanumeric(max 30 characters), year can be only 4 digits"});
+                }
             }
-            insert_query = "INSERT INTO freelancer_skills VALUES " + temp.slice(0,temp.length-1) + ";";
-        }
 
-        //Execute the query to insert skill details
-        db_freelancer.query(insert_query, function(err,result) {
-            if(err) throw err;
-            console.log(result);
+            if(temp.length != 0)
+            {
+                insert_query = "INSERT INTO freelancer_educations VALUES " + temp.slice(0,temp.length-1) + ";";
+            
+                //Execute the query to insert education details
+                db_freelancer.query(insert_query, function(err,result) {
+                    if(err) throw err;
+                    console.log(result);
+                });
+            }
+            
+            
+            //Group all the skill details and form a query
+            temp="";
+            if(skills)
+            {
+                for (let i=0;i<skills.length;i++)
+                {
+                    console.log(validate.validate_alphanumeric(skills[i]["skill"],30));
+                    if(validate.validate_alphanumeric(skills[i]["skill"],30))
+                    {
+                        temp += "('FID" + freelancer_count + "', '" + skills[i]["skill"] + "', '" + skills[i]["experience"] + "'),";
+                    }
+                    else
+                    {
+                        res.send({"Message":"Skill should be only alphanumeric(max 30 characters)"});
+                    }
+                }
+                if(temp.length != 0)
+                {
+                    insert_query = "INSERT INTO freelancer_skills VALUES " + temp.slice(0,temp.length-1) + ";";
+                    //Execute the query to insert skill details
+                    db_freelancer.query(insert_query, function(err,result) {
+                        if(err) throw err;
+                        console.log(result);
+                    });
+                }
+            }
+
+            
+
+            //Group all the social details and form a query
+            temp="";
+            for (let i=0;i<socials.length;i++)
+            {
+                console.log(validate.validate_letters(socials[i]["media"],30)+" "+validate.validate_username(socials[i]["userhandle"]));
+                if(validate.validate_letters(socials[i]["media"],30) && validate_username(socials[i]["userhandle"]))
+                {
+                    temp += "('FID" + freelancer_count + "', '" + socials[i]["media"] + "', '" + socials[i]["userhandle"] + "'),";
+                }
+                else
+                {
+                    res.send({"Message":"media should be only letters(max 30 characters) and userhandle should start with letter and have only letters,digits and _ (maxlength 30) "});
+                }
+            }
+            insert_query = "INSERT INTO freelancer_socials VALUES " + temp.slice(0,temp.length-1) + ";";
+            
+            //Execute the query to insert social details
+            db_freelancer.query(insert_query, function(err,result) {
+                if(err) throw err;
+                console.log(result);
+            });     
         });
-
-        //Group all the social details and form a query
-        temp="";
-        for (let i=0;i<socials.length;i++)
-        {
-            temp += "('FID" + freelancer_count + "', '" + socials[i]["media"] + "', '" + socials[i]["userhandle"] + "'),";
-        }
-        insert_query = "INSERT INTO freelancer_socials VALUES " + temp.slice(0,temp.length-1) + ";";
-        
-        //Execute the query to insert social details
-        db_freelancer.query(insert_query, function(err,result) {
-            if(err) throw err;
-            console.log(result);
-        });     
-    });
-    res.send();
+        res.send({"message":"Freelancer registered"});
+    }
+    else
+    {
+        res.send({"Message":"Invalid country or username"})
+    }
 });
 
 //Route for posting client registration
@@ -149,61 +209,76 @@ app.post("/register_client", (req, res) => {
     const country = req.body.country;
     const company = req.body.company;
 
-    //Read client_count from counter to fix a client_id and increment client_count
-    db_client.query("SELECT client_count FROM counter", function(err, result) {
-        if(err) throw err;
-        const count = result.map(row => row.client_count);
-        var client_count = count[0];
-        console.log(client_count);
-
-        const insert_query = "INSERT INTO client VALUE('CID" + client_count + "', '" + country + "', '" + company + "', '" + username + "');";
-        console.log(insert_query);
-
-        //Insert client details into the client table
-        db_client.query(insert_query, function(err, result) {
+    if(validate.validate_letters(country,30) && validate.validate_letters(company,30))
+    {
+        //Read client_count from counter to fix a client_id and increment client_count
+        db_client.query("SELECT client_count FROM counter", function(err, result) {
             if(err) throw err;
-            console.log(result);
+            const count = result.map(row => row.client_count);
+            var client_count = count[0];
+            console.log(client_count);
 
-            //Update the client_count if successfully inserted
-            db_client.query("UPDATE counter SET client_count=client_count+1", function(err,result) {
+            const insert_query = "INSERT INTO client VALUE('CID" + client_count + "', '" + country + "', '" + company + "', '" + username + "');";
+            console.log(insert_query);
+
+            //Insert client details into the client table
+            db_client.query(insert_query, function(err, result) {
                 if(err) throw err;
                 console.log(result);
+
+                //Update the client_count if successfully inserted
+                db_client.query("UPDATE counter SET client_count=client_count+1", function(err,result) {
+                    if(err) throw err;
+                    console.log(result);
+                });
             });
         });
-    });
-    res.send({"message":"hello"});
+    }
+    else
+    {
+        res.send({"Message":"Invalid country or company name(max 30 letters or - only)"})
+    }
+    res.send({"Message":"Client registered"});
 });
 
 //Route for authentication
 app.post("/authenticate", (req, res) => {
     const password = req.body.password;
     const username = req.body.username;
-    db_user.query("SELECT password, user_type FROM users WHERE username='"+username+"';", function(err, result) {
-        if(err) throw err;
-        console.log(result);
-        const stored_password = result.map(row => row.password);
-        const usertype = result.map(row => row.user_type);
-        if(stored_password.length == 0)
-            res.json({"message":"Username not found"});
-        else 
-        {
-            //compare if the password entered on hashing gives the hashed-password stored in the database 
-            console.log(password +" " + stored_password[0] + " " + bcrypt.compare(password, stored_password[0]))
-            bcrypt.compare(password, stored_password[0])
-            .then( match => { 
-                if(! match) 
-                    res.json({"message": "Wrong Password"});
-                else
-                {
-                    console.log(usertype[0])
-                    if(usertype[0] === "Freelancer")
-                        res.json({"message": "Freelancer"}); 
-                    if(usertype[0] === "Client")
-                        res.json({"message":"Client"});
-                }
-            });
-        }
-    });
+    console.log(validate.validate_password(password)+" "+validate.validate_username(username,30))
+    if(validate.validate_password(password) && validate.validate_username(username,30))
+    {
+        db_user.query("SELECT password, user_type FROM users WHERE username='"+username+"';", function(err, result) {
+            if(err) throw err;
+            console.log(result);
+            const stored_password = result.map(row => row.password);
+            const usertype = result.map(row => row.user_type);
+            if(stored_password.length == 0)
+                res.json({"message":"Username not found"});
+            else 
+            {
+                //compare if the password entered on hashing gives the hashed-password stored in the database 
+                console.log(password +" " + stored_password[0] + " " + bcrypt.compare(password, stored_password[0]))
+                bcrypt.compare(password, stored_password[0])
+                .then( match => { 
+                    if(! match) 
+                        res.json({"message": "Wrong Password"});
+                    else
+                    {
+                        console.log(usertype[0])
+                        if(usertype[0] === "Freelancer")
+                            res.json({"message": "Freelancer"}); 
+                        if(usertype[0] === "Client")
+                            res.json({"message":"Client"});
+                    }
+                });
+            }
+        });
+    }
+    else
+    {
+        res.send({"Message":"Invalid username or password(Username should start with letter and have only letters,digits and _ (maxlength 30), Password can only contain letters, digits and @ # $ ! % & (8 to 30 length))"})
+    }
 });
 
 //Route for sending freelancer profile details
@@ -282,34 +357,41 @@ app.post("/client_profile", (req, res) => {
 app.post("/projects", (req, res) => {
     let domain = req.body.domain_name.trim();
     console.log(domain);
+    console.log(validate.validate_letters(domain,30))
+    if(validate.validate_letters(domain,30))
+    {
+        //Uses procedure to extract all product details
+        let query = "call getProjects('" + domain + "');"
+        db_freelancer.query(query, function(err,result) {
+            if(err) throw err;
+            console.log(result);
+            let id = result[0].map(row => row.p_id);
+            let title = result[0].map(row => row.p_title);
+            let desc = result[0].map(row => row.p_desc);
+            let status = result[0].map(row => row.p_status);
+            let budget = result[0].map(row => row.p_budget);
+            let timeline = result[0].map(row => row.p_timeline);
+            let domains = result[0].map(row => row.domains)
+            let skills = result[0].map(row => row.skills)
+            let freelancers = result[0].map(row => row.freelancers);
+            let colab = result[0].map(row => row.p_colab);
 
-    //Uses procedure to extract all product details
-    let query = "call getProjects('" + domain + "');"
-    db_freelancer.query(query, function(err,result) {
-        if(err) throw err;
-        console.log(result);
-        let id = result[0].map(row => row.p_id);
-        let title = result[0].map(row => row.p_title);
-        let desc = result[0].map(row => row.p_desc);
-        let status = result[0].map(row => row.p_status);
-        let budget = result[0].map(row => row.p_budget);
-        let timeline = result[0].map(row => row.p_timeline);
-        let domains = result[0].map(row => row.domains)
-        let skills = result[0].map(row => row.skills)
-        let freelancers = result[0].map(row => row.freelancers);
-        let colab = result[0].map(row => row.p_colab);
+            function zip(arrays) {
+                return arrays[0].map(function(_,i) {
+                    return arrays.map(function(array){return array[i]})
+                });
+            }
 
-        function zip(arrays) {
-            return arrays[0].map(function(_,i) {
-                return arrays.map(function(array){return array[i]})
-            });
-        }
-
-        //zip all project details together
-        const project_details = zip([id, title, desc, status, budget, timeline, req, domains, skills, freelancers, colab]);
-        console.log(project_details);
-        res.send({"projects": project_details});
-    });
+            //zip all project details together
+            const project_details = zip([id, title, desc, status, budget, timeline, req, domains, skills, freelancers, colab]);
+            console.log(project_details);
+            res.send({"projects": project_details});
+        });
+    }
+    else
+    {
+        res.send({"Message":"Domain name should be only letters(max length 30)"});
+    }
 });
 
 //Endpoint to handle freelancer joining a project
@@ -331,7 +413,10 @@ app.post("/join_project", (req, res) => {
         } 
         else
         {
-            res.json({"Message": "Joined Successfully"});
+            db_client.query("UPDATE project SET status='In Progress' WHERE project_ID='"+p_id+"';", function(err,result) {
+                if(err) throw err;
+                res.json({"Message": "Joined Successfully"});
+            });
         }
     });
 });
@@ -352,56 +437,82 @@ app.post("/get_reviews", (req, res) => {
 //Client can publish projects
 app.post("/publish", (req, res) => {
     const username = req.body.username;
-    const skills = req.body.skills.split(",");
-    const domains = req.body.tags.split(",");
-    
-    //Read project_count to generate new p_id
-    db_client.query("SELECT project_count FROM counter", function(err, result) {
-        if(err) throw err;
-        const count_p = result.map(row => row.project_count);
-        var project_count = count_p[0];
+    const title = req.body.title;
+    const description = req.body.description;
+    const budget = req.body.budget;
+    const timeline = req.body.timeline;
 
-        //insert new project details
-        const query = "INSERT into project VALUE('PID" + project_count + "', '" + req.body.title + "', '" + req.body.description+ "', " + req.body.budget + ", 'Not Assigned', " + req.body.timeline + ", '" + username + "', '" + req.body.collab + "');";
-        db_client.query(query, function(err, result) {
+    console.log(validate.validate_alphanumeric(title, 30)+ " " + validate.validate_alphanumeric(description,60) + " " + validate.validate_digits(budget) + " " + validate.validate_digits(timeline));
+    if(validate.validate_alphanumeric(title, 30) + " " + validate.validate_alphanumeric(description,60) + " " + validate.validate_digits(budget) + " " + validate.validate_digits(timeline))
+    {
+        const skills = req.body.skills.split(",");
+        const domains = req.body.tags.split(",");
+        
+        //Read project_count to generate new p_id
+        db_client.query("SELECT project_count FROM counter", function(err, result) {
             if(err) throw err;
-            console.log(result);
+            const count_p = result.map(row => row.project_count);
+            var project_count = count_p[0];
 
-            //Convert domains string to a query for insertion
-            let list1 = "";
-            for(let i=0;i<domains.length;i++)
-            {
-                list1+="('PID" + count_p +"', '" + domains[i] + "'),";
-            }
-            list1=list1.slice(0,list1.length-1);
-           
-
-            //Convert skills string to a query for insertion
-            let list2 = "";
-            for(let i=0;i<skills.length;i++)
-            {
-                list2+="('PID" + count_p +"', '" + skills[i] + "'),";
-            }
-            list2=list2.slice(0,list2.length-1);
-
-            db_client.query("INSERT INTO project_domains VALUES"+list1+";", function(err, result) {
+            //insert new project details
+            const query = "INSERT into project VALUE('PID" + project_count + "', '" + title + "', '" + description+ "', " + budget + ", 'Not Assigned', " + timeline + ", '" + username + "', '" + req.body.collab + "');";
+            db_client.query(query, function(err, result) {
                 if(err) throw err;
                 console.log(result);
-                
-                db_client.query("INSERT INTO project_skills VALUES"+list2+";", function(err, result) {
-                    if(err) throw err
-                    console.log(result);
 
-                    //Update the project_count if successfully inserted
-                    db_client.query("UPDATE counter SET project_count=project_count+1", function(err,result) {
+                //Update the project_count if successfully inserted
+                db_client.query("UPDATE counter SET project_count=project_count+1", function(err,result) {
+                    if(err) throw err;
+                    console.log(result);
+                });
+
+                //Convert domains string to a query for insertion
+                let list1 = "";
+                for(let i=0;i<domains.length;i++)
+                {
+                    if(validate.validate_alphanumeric(domains[i],30))
+                    {
+                        list1+="('PID" + count_p +"', '" + domains[i] + "'),";
+                    }
+                }
+            
+
+                //Convert skills string to a query for insertion
+                let list2 = "";
+                for(let i=0;i<skills.length;i++)
+                {
+                    if(validate.validate_alphanumeric(skills[i],30))
+                    {
+                        list2+="('PID" + count_p +"', '" + skills[i] + "'),";
+                    }
+                }
+
+                if(list1.length != 0)
+                {
+                    list1 = list1.slice(0,list1.length-1);
+                    db_client.query("INSERT INTO project_domains VALUES"+list1+";", function(err, result) {
                         if(err) throw err;
                         console.log(result);
+                       
+                        if(list2.length != 0)
+                        {
+                            list2 = list2.slice(0,list2.length-1);
+                            db_client.query("INSERT INTO project_skills VALUES"+list2+";", function(err, result) {
+                                if(err) throw err
+                                console.log(result);
+                            }); 
+                        }
                     });
-                }); 
+                }
             });
         });
-    });
-    res.send({"message":"hello"});
+        res.send({"Message":"hello"});
+    }
+    
+    else
+    {
+        res.send({"Message":"Invalid title, description, budget or timeline (title should be alphanumeric(max 30), description should be alphanumeric(max 60), budget and timeline should be int)"})
+    }
 });
 
 
@@ -433,12 +544,14 @@ app.get('/display_image/:id', (req, res) => {
   const imageId = req.params.id;
 
   db_user.query('SELECT data, contentType FROM image WHERE username = ?', [imageId], (err, result) => {
-    if (err) {
+    if(err) 
+    {
       console.error('Error retrieving image from MySQL:', err);
       return res.status(500).json({ error: 'Image retrieval failed' });
     }
 
-    if (result.length === 0) {
+    if (result.length === 0) 
+    {
       return res.status(404).json({ error: 'Image not found' });
     }
 
@@ -451,7 +564,8 @@ app.get('/display_image/:id', (req, res) => {
 
 //Route to upload project details pdf into database
 app.post('/upload_pdf', upload.single('pdf'), (req, res) => {
-  if (!req.file) {
+  if (!req.file) 
+  {
     return res.status(400).json({ error: 'No file uploaded' });
   }
 
@@ -465,7 +579,8 @@ app.post('/upload_pdf', upload.single('pdf'), (req, res) => {
   console.log(req.body.project_title);
 
   db_client.query('INSERT INTO project_pdf SET ?', pdf, (err, result) => {
-    if (err) {
+    if (err) 
+    {
       console.error('Error storing PDF in MySQL:', err);
       return res.status(500).json({ error: 'PDF upload failed' });
     }
@@ -478,12 +593,14 @@ app.get('/display_pdf/:id', (req, res) => {
   const pdfId = req.params.id;
 
   db_user.query('SELECT data, contentType FROM project_pdf WHERE title = ?', [pdfId], (err, result) => {
-    if (err) {
+    if (err) 
+    {
       console.error('Error retrieving PDF from MySQL:', err);
       return res.status(500).json({ error: 'PDF retrieval failed' });
     }
 
-    if (result.length === 0) {
+    if (result.length === 0) 
+    {
       return res.status(404).json({ error: 'PDF not found' });
     }
 

@@ -48,7 +48,7 @@ function FileUpload(props)
     //Render file upload
     return (
         <div>
-            <input type="file" name="requirements" onChange={handleFileChange} />
+            <input type="file" accept="application/pdf" name="requirements" onChange={handleFileChange} />
             <button onClick={handleUpload}>Upload</button>
         </div>
     );
