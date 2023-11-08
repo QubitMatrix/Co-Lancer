@@ -5,7 +5,7 @@ body
 {
   background-image: url('../public/bg3.png');
   background-size: cover;
-  overflow:auto;
+  overflow-y: scroll;
   height: 80%;
 }
 .button,.add_button,#submit_button,.submit_button,#chat_button
@@ -22,6 +22,18 @@ body
   width: 200px;
   border-color: #FA924C;
   cursor: pointer
+}
+
+.b_upload,#searchbar
+{
+  background-image:linear-gradient(to bottom right, #FA924C,#f9b486);
+  border-style:initial;
+  border-radius: 8px;
+  text-align: center;
+  font-size: large;
+  height: 40px;
+  width: 100px;
+
 }
 
 .button:active
@@ -47,7 +59,7 @@ input:focus
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 60vh;
+  height: 40vh;
 }
 
 .reg_label,.reg_f_label,.reg_c_label
@@ -84,7 +96,7 @@ input:focus
   width: 300px;
   border-radius: 22px;
   position: fixed;
-  top: 20%;
+  top: 10%;
   left: 40%;
   background-image: linear-gradient(to bottom right,#f5883e,#FA924C);
 }
@@ -153,7 +165,7 @@ li
   opacity: 0.95;
 }
 
-.f_details
+.f_details,#c_profile
 {
   float: inline-start;
   padding-top: 30px;
@@ -173,4 +185,37 @@ li
   display: inline-block;
   padding-left: 70px;
   padding-top: 60px;
+}
+
+#client_profile
+{
+  display: inline-block;
+  padding-left: 70px;
+  padding-top: 60px;
+  padding-bottom: 20px;
+}
+
+#c_proj
+{
+  padding-top: 20px;
+  padding-right: 20px;
+  margin-left: 400px;
+  padding-left: 20px;
+  padding-bottom: 20px;
+  background-color:coral;
+  border-radius: 18px;
+  opacity: 0.95;
+}
+
+#project_page
+{
+  padding-top: 30px;
+  padding-bottom: 30px;
+  width: 600px;
+  border-radius: 22px;
+  position: fixed;
+  top: 5%;
+  left: 30%;
+  padding-left: 50px;
+  background-image: linear-gradient(to bottom right,#f5883e,#FA924C);
 }

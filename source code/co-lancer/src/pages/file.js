@@ -49,7 +49,7 @@ function FileUpload(props)
     return (
         <div>
             <input type="file" name="requirements" onChange={handleFileChange} />
-            <button onClick={handleUpload}>Upload</button>
+            <button className='b_upload' onClick={handleUpload}>Upload</button>
         </div>
     );
 }
