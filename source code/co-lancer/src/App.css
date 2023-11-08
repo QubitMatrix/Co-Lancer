@@ -210,7 +210,17 @@ li
 {
   list-style-type:square;
 }
-.handoff_div
+.handoff_div, .feedback_div
 {
+  display: none;
+}
+#upload_profile_placeholder 
+{
+  position: fixed;
+  display: none;
+}
+#upload_project_pdf
+{
+  position: fixed;
   display: none;
 }

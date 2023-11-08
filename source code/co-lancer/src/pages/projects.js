@@ -109,7 +109,7 @@ function ProjectPage()
       for (let i=0;i<pro.length;i++) 
       {
         var domain_tags = [];
-        const domains = pro[i][7].split(",");
+        const domains = pro[i][6].split(",");
 
         //Retreive domain tags
         for(let j=0;j<domains.length;j++)
@@ -117,11 +117,11 @@ function ProjectPage()
             console.log("domains"+ domains[j]);
             domain_tags.push(<span className="tags">#{domains[j]}</span> )
         }
-        if(pro[i][10] === 'YES')
+        if(pro[i][9] === 'YES')
             domain_tags.push(<span className="tags">#CollabNow</span>) //add CollabNow tag if needed
 
         //Extract available project and link to detailed project page
-        if(pro[i][3] === 'Not Assigned' || (pro[i][3] === 'In Progress' && pro[i][10] === "YES"))
+        if(pro[i][3] === 'Not Assigned' || (pro[i][3] === 'In Progress' && pro[i][9] === "YES"))
         {
             arr1.push(<div className="project_items">
                 <li>

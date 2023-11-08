@@ -58,4 +58,11 @@ function validate_url(url)
     return url_pattern.test(url);
 }
 
-module.exports = {validate_name, validate_username, validate_email, validate_password, validate_letters, validate_alphanumeric, validate_year, validate_url};
+function validate_digits(digits)
+{
+    console.log("digits: "+digits);
+    const digits_patterns =/^[0-9]+$/;
+    console.log(digits_patterns);
+    return digits_patterns.test(digits);
+}
+module.exports = {validate_name, validate_username, validate_email, validate_password, validate_letters, validate_alphanumeric, validate_year, validate_url, validate_digits};
