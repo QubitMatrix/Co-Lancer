@@ -56,21 +56,22 @@ function CreateProject()
     }
 
     //Page rendered for creating a new project
-    return(<div>
+    return(<div id="project_page">
             <form id="create_new_project" onSubmit={handleSubmit}>
-                <label>Title</label> <input type="text" name="title" value={inputs.title} placeholder="Project Title" onChange={handleChange} required /> <br/>
-                <label>Description</label> <input type="textarea" name="description" value={inputs.description} placeholder="Project Description" onChange={handleChange} required /> <br/>
-                <label>Domains</label> <input type="textarea" name="tags" value={inputs.tags} placeholder="Project Domains" onChange={handleChange} required /> <br/>
-                <label>Skills</label> <input type="textarea" name="skills" value={inputs.skills} placeholder="Project Skills" onChange={handleChange} required /> <br/>
-                <label>Budget(Rs.)</label> <input type="number" name="budget" value={inputs.budget} placeholder="Project Budget" onChange={handleChange} required /> <br/>
-                <label>Timeline(Days)</label> <input type="number" name="timeline" value={inputs.timeline} placeholder="Project Timeline" onChange={handleChange} required /> <br/>
+                <label>Title</label> <br/><input className='reg_input' type="text" name="title" value={inputs.title} placeholder="Project Title" onChange={handleChange} required /> <br/>
+                <label>Description</label> <br/> <input className='reg_input' type="textarea" name="description" value={inputs.description} placeholder="Project Description" onChange={handleChange} required /> <br/>
+                <label>Domains</label> <br/> <input className='reg_input' type="textarea" name="tags" value={inputs.tags} placeholder="Project Domains" onChange={handleChange} required /> <br/>
+                <label>Skills</label> <br/> <input className='reg_input' type="textarea" name="skills" value={inputs.skills} placeholder="Project Skills" onChange={handleChange} required /> <br/>
+                <label>Budget(Rs.)</label> <br/> <input className='reg_input' type="number" name="budget" value={inputs.budget} placeholder="Project Budget" onChange={handleChange} required /> <br/>
+                <label>Timeline(Days)</label> <br/> <input className='reg_input' type="number" name="timeline" value={inputs.timeline} placeholder="Project Timeline" onChange={handleChange} required /> <br/>
                 <label>Collaboration?</label><br/>
                 <input id="collab_yes" type="radio" name="collab" value="YES" checked={inputs.collab==="YES"} onClick={handleChange} />
                 <label className='collab_label' htmlFor="collab_yes">YES</label> <br/>
                 <input id="collab_no" type="radio" name="collab" value="NO" checked={inputs.collab==="NO"} onClick={handleChange} />
                 <label className='collab_label' htmlFor="collab_no">NO</label> <br/> <br/>
-                <button type="submit">Publish</button>
+                <button className='button' type="submit">Publish</button>
             </form> 
+            <br/>
             <div id="upload_project_pdf">
                 <FileUpload project_title={inputs.title} />
             </div>

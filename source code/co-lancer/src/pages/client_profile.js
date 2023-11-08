@@ -207,11 +207,15 @@ function ClientProfile()
     return (
         <div id="client_profile">
             <div id="details">
+              <div id="c_profile">
                 <ImageDisplay imageId={username}/>
                 <h3>Name: {profile?profile.person_name:''}</h3>
                 <h4>Username: {username}</h4>
                 <h4>Organization: {profile?profile.company:''} </h4>
-                <h4>Existing projects</h4>
+                <br/> 
+                </div>
+              <div id="c_proj">
+                <h3>Existing projects</h3>
                 <ul>
                     {existing_projects_arr}
                 </ul>
@@ -221,6 +225,8 @@ function ClientProfile()
                 </ul>
                 <br/>
                 <button className="button" onClick={()=>navigate("/create_project", {state:{username:username}})}>Create New Project</button>
+                </div>
+               
             </div>
         </div>
     )
