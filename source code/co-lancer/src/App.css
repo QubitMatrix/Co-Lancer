@@ -174,3 +174,43 @@ li
   padding-left: 70px;
   padding-top: 60px;
 }
+h1,h2,h3,h4,h5,h6
+{
+  font-weight: bold;
+}
+h1
+{
+  font-size:35px;
+}
+h2
+{
+  font-size:30px;
+}
+h3
+{
+  font-size:25px;
+}
+h4
+{
+  font-size: 20px;
+}
+h5
+{
+  font-size: 18px;
+}
+h6
+{
+  font-size: 15px;
+}
+body
+{
+  font-size: 18px;
+}
+li
+{
+  list-style-type:square;
+}
+.handoff_div
+{
+  display: none;
+}

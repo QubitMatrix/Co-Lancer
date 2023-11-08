@@ -10,11 +10,66 @@ function FreelancerProfile()
 {
     //set profile page values
     const [profile, setProfile] = useState(null);
+    
+    //set state variable for inputs
+    const [inputs, setInputs] = useState([]);
+
     const navigate = useNavigate()
 
     //Access state details from previous component
     const {state} = useLocation();
     const username = state["username"];
+
+    //Handle change of value in textarea
+    const handleChange = (e,pro_id) => {
+      e.preventDefault(); //prevents page refreshing after form submission
+      const { name, value } = e.target; // Destructuring assignment to extract name and value from target DOM element
+
+      //Update the state only once with both new values
+      setInputs(prevInputs => ({
+        ...prevInputs,
+        "url": value,
+        "project_id": pro_id
+      }));
+    }
+
+    //Handle submission of project
+    const handleSubmit = async (e,count) => {
+      e.preventDefault();
+      console.log("count_submit"+count);
+
+      const serverUrl = "http://localhost:3000/submit_project";
+      try 
+      {
+        const response = await fetch(serverUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(inputs),
+        });
+
+        if(response.ok)
+        {
+          console.log("successfully submitted");
+          document.getElementsByClassName("handoff_div")[count].style.display="none"; // Remove textarea and submit once it is submitted
+        }
+        else
+        {
+          console.log("didn't submit");
+        }
+      }
+      catch(err)
+      { 
+        console.error(err);
+      }
+    }
+
+    //Show textarea and submit button when freelancer wants to handoff project
+    const handleHandoff = (count) => {
+      console.log("count"+count);
+      document.getElementsByClassName("handoff_div")[count].style.display = "block";
+    }
 
     //Get the freelancer details from backend
     useEffect(() => {
@@ -101,12 +156,32 @@ function FreelancerProfile()
       {
         projects = [];
       }
-      for(let i=0;i<projects.length;i++)
+      for(let i=0,j=-1;i<projects.length;i++)
       {
         if(projects[i][3] === 'Completed')
-          completed_projects_arr.push(<li>{projects[i][0]} - {projects[i][1]} - {projects[i][2]} - {projects[i][3]}</li>);
+        {  
+          completed_projects_arr.push(<div>
+            <li>
+              <h4>{projects[i][1]}</h4> 
+              <p>{projects[i][2]}</p>
+            </li>
+            </div>);
+        }
         else
-          current_projects_arr.push(<li>{projects[i][0]} - {projects[i][1]} - {projects[i][2]} - {projects[i][3]}</li>);
+        { 
+          j+=1;
+          current_projects_arr.push(<div>
+            <li>
+              <h4>{projects[i][1]}</h4> 
+              <p>{projects[i][2]}</p>
+              <button className="handoff button" onClick={()=>handleHandoff(j)}>Handoff Project</button><br/>
+              <div className="handoff_div">
+                <input type='textarea' value={inputs.project_url} placeholder="Project link on github" onChange={(e) => handleChange(e,projects[i][0])} required /> 
+                <button className="project_handoff button" onClick={(e)=>handleSubmit(e,j)}>Submit</button>
+              </div>
+            </li>
+            </div>);
+        }
       }
     }
 

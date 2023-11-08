@@ -343,10 +343,10 @@ app.post("/client_profile", (req, res) => {
         var name = f_name+" "+m_name+" "+l_name; 
         console.log(name, company);
 
-        retrieve_query = "SELECT project_ID, title, description FROM client JOIN project ON client.username=project.client_username WHERE client_id='" + client_id + "';";
+        retrieve_query = "SELECT project_ID, title, description, status, url FROM client JOIN project ON client.username=project.client_username WHERE client_id='" + client_id + "';";
         db_client.query(retrieve_query, function(err, result) {
             if(err) throw err;
-            let projects = result.map(row => [row.project_ID, row.title, row.description]);
+            let projects = result.map(row => [row.project_ID, row.title, row.description, row.status, row.url]);
             console.log(projects);
             res.json({"person_name": name, "company": company, "existing_projects": projects});
         });
@@ -383,7 +383,7 @@ app.post("/projects", (req, res) => {
             }
 
             //zip all project details together
-            const project_details = zip([id, title, desc, status, budget, timeline, req, domains, skills, freelancers, colab]);
+            const project_details = zip([id, title, desc, status, budget, timeline, domains, skills, freelancers, colab]);
             console.log(project_details);
             res.send({"projects": project_details});
         });
@@ -610,6 +610,52 @@ app.get('/display_pdf/:id', (req, res) => {
   });
 });
 
+//Route to handle project submission from freelancer
+app.post('/submit_project', (req, res) => {
+    const url = req.body.url;
+    const project_id = req.body.project_id;
+
+    console.log(url+project_id+":"+validate.validate_url(url));
+    if(validate.validate_url(url))
+    {
+        //Update the url field s tat client can access link
+        const query = "UPDATE project SET url='" + url + "' WHERE project_ID='" + project_id + "';";
+        db_client.query(query, (err, result) => {
+            if(err) throw err;
+        });
+        res.send({"Message":"Successfully handed off"}); 
+    }
+    else
+    {
+        res.send({"Message":"Error in handing off"});
+    }
+});
+
+//Route to handle finalizing of project from client
+app.post('/finalize_project', (req, res) => {
+    const project_id = req.body.project_id;
+    console.log("project"+project_id);
+    
+    //Update the status as completed
+    const query = "UPDATE project SET status='Completed' WHERE project_ID='" + project_id + "';";
+    db_client.query(query, (err, result) => {
+        if(err) throw err;
+        res.send();
+    })
+})
+
+//Route to handle return of project for revision from client
+app.post('/return_project', (req, res) => {
+    const project_id = req.body.project_id;
+    console.log("project"+project_id);
+
+    //Remove the link from url field to let the freelancer know that revision is needed
+    const query = "UPDATE project SET url="+null+" WHERE project_ID='" + project_id + "';";
+    db_client.query(query, (err, result) => {
+        if(err) throw err;
+        res.send();
+    })
+})
 
 //app listening on port 3000
 app.listen(3000,() => {
