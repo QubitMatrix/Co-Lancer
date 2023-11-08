@@ -125,7 +125,7 @@ function ProjectPage()
         {
             arr1.push(<div className="project_items">
                 <li>
-                    <Link to={`/project_details`} state={{"project": pro[i], "f_id": f_id}}><h3>{pro[i][1]}</h3></Link> 
+                    <Link to={`/project_details`} state={{"project": pro[i], "f_id": f_id}}><h4>{pro[i][1]}</h4></Link> 
                     <p>{pro[i][2]}</p>
                     <div>{domain_tags}</div>
                 </li>
@@ -138,7 +138,7 @@ function ProjectPage()
         {
             arr2.push(<div className="project_items">
                 <li>
-                    <h3>{pro[i][1]}</h3>
+                    <Link to={`/project_details`} state={{"project": pro[i], "f_id": f_id}}><h4>{pro[i][1]}</h4></Link> 
                     <p>{pro[i][2]}</p>
                     <div>{domain_tags}</div>
                 </li>
@@ -154,11 +154,11 @@ function ProjectPage()
     <div id="project_page">
       <input type="text" name="domain_name" value={domain.domain_name} onChange={handleChange} required />
       <button id="searchbar" onClick={handleSearch}>Search</button>
-      <h2>Available Projects</h2>
+      <h3>Available Projects</h3>
       <ul>
         {projects_arr.available_projects}
       </ul>
-      <h2>Completed Projects</h2>
+      <h3>Completed Projects</h3>
       <ul>
         {projects_arr.completed_projects}
       </ul>
