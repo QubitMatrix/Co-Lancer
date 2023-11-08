@@ -4,7 +4,6 @@ const db = require("./config/db.js");
 const multer = require('multer');
 const cors = require('cors');
 const validate = require("./validate.js");
-const validate = require("./validate.js");
 
 const app = express();
 const storage = multer.memoryStorage();
@@ -456,7 +455,7 @@ app.post("/publish", (req, res) => {
             var project_count = count_p[0];
 
             //insert new project details
-            const query = "INSERT into project VALUE('PID" + project_count + "', '" + title + "', '" + description+ "', " + budget + ", 'Not Assigned', " + timeline + ", '" + username + "', '" + req.body.collab + "');";
+            const query = "INSERT into project VALUE('PID" + project_count + "', '" + title + "', '" + description+ "', " + budget + ", 'Not Assigned', " + timeline + ", '" + username + "', '" + req.body.collab + "', null);";
             db_client.query(query, function(err, result) {
                 if(err) throw err;
                 console.log(result);
@@ -655,6 +654,41 @@ app.post('/return_project', (req, res) => {
     db_client.query(query, (err, result) => {
         if(err) throw err;
         res.send();
+    })
+})
+
+//Route to handle feedback submission
+app.post('/give_feedback', (req, res) => {
+    console.log("feedback" + req.body.username + req.body.project_id);
+    const username = req.body.username;
+    const project_id = req.body.project_id;
+    const review = req.body.review;
+    const rating = req.body.rating;
+
+    //Get all freelancers involved with the project
+    let query = "SELECT freelancer_ID FROM project_freelancers WHERE project_ID='"+project_id+"';";
+    db_client.query(query, (err, result) => {
+        if(err) throw err;
+        const freelancers = result.map(row => row.freelancer_ID);
+        console.log(freelancers);   
+        
+        for(let i=0;i<freelancers.length;i++)
+        {
+            //Insert review into each freelancers reviews
+            query = "INSERT INTO reviews VALUES('" + username+ "','" + freelancers[i] + "', '" + review + "', '"+ rating + "');";
+            db_client.query(query, (err,result) => {
+                if(err) throw err;
+                console.log(result);
+
+                //Update freelancer's cookie based on rating 
+                query = "UPDATE freelancer SET cookies=cookies+" + rating + " WHERE freelancer_id='" + freelancers[i] + "';";
+                db_freelancer.query(query, (err, result) => {
+                    if(err) throw err;
+                    console.log(result);
+                })
+            })
+        }
+        res.send({"Message":"Successfully saved review"});
     })
 })
 
