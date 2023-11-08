@@ -50,4 +50,12 @@ function validate_year(year)
     return year_pattern.test(year);
 }
 
-module.exports = {validate_name, validate_username, validate_email, validate_password, validate_letters, validate_alphanumeric, validate_year };
+function validate_url(url)
+{
+    console.log("url: "+url);
+    const url_pattern = /^[a-zA-Z0-9: -_.//]+$/;
+    console.log(url_pattern);
+    return url_pattern.test(url);
+}
+
+module.exports = {validate_name, validate_username, validate_email, validate_password, validate_letters, validate_alphanumeric, validate_year, validate_url};

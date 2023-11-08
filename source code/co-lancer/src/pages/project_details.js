@@ -28,42 +28,13 @@ function ProjectDetails()
         }
     }
 
-    //Handle freelancer joining the project 
-    const handleClick = async (e) => {
-        e.preventDefault();
-        
-        //backend endpoint
-        const serverUrl = "http://localhost:3000/join_project";
-
-        try 
-        {
-            const response = await fetch(serverUrl, {
-                method: 'POST',
-                headers: {
-                'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({"p_id":p_id, "f_id":f_id}),
-            });
-
-            if (!response.ok) 
-            {
-                throw new Error("HTTP error, " + response.status);
-            }
-
-            const data = await response.json();
-            alert(data["Message"]);
-        } 
-        catch (err) 
-        {
-            console.error(err);
-        }
-    }
+    
 
 
     //call the aggregate function for forming each list
-    aggregate(project_state[7]? project_state[7].split(",") : [],domains_arr);
-    aggregate(project_state[8]? project_state[8].split(",") : [],skills_arr);
-    aggregate(project_state[9]? project_state[9].split(",") : [],freelancers_arr);
+    aggregate(project_state[6]? project_state[6].split(",") : [],domains_arr);
+    aggregate(project_state[7]? project_state[7].split(",") : [],skills_arr);
+    aggregate(project_state[8]? project_state[8].split(",") : [],freelancers_arr);
 
     
     console.log(domains_arr);
@@ -72,12 +43,10 @@ function ProjectDetails()
     return(<div>
         <h2>{project_state[1]}</h2>
         <button id="view_pdf" onClick={()=>{navigate("/project_pdf", {state:{title:project_state[1]}})}}>View PDF</button><br/>
-        <button id="join" onClick={handleClick}>Join Now</button>
         <h3>Description</h3>
         <p>{project_state[2]}</p>
         <p><b>Budget</b><br/>{project_state[4]}</p>
         <p><b>Timeline</b><br/>{project_state[5]}</p>
-        <p><b>Requirements</b><br/>{project_state[6]}</p>
         <p><b>Domains</b></p>
         <ul>
             <li>{domains_arr}</li>
@@ -90,7 +59,6 @@ function ProjectDetails()
         <ul>
             <li>{freelancers_arr}</li>
         </ul>
-        
     </div>)
 }
 
