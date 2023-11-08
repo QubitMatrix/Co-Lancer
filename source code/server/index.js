@@ -8,10 +8,36 @@ const validate = require("./validate.js");
 const app = express();
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
-
+let final_msg=null
 const PORT = 3000;
 app.use(cors());
 app.use(express.json());
+
+var http = require('http').Server(app);
+const PORT_CHAT = 4000;
+var socketIO = require('socket.io')(http, {
+    cors:{
+        origin: "http://localhost:3001"
+    }
+});
+
+
+http.listen(PORT_CHAT, () => {
+    console.log(`listening on *:${PORT_CHAT}`);
+});
+
+socketIO.on('connection', (socket) => {
+    console.log(`⚡: ${socket.id} user just connected!`);
+
+    socket.on('message',(data) => {
+        final_msg=data
+        console.log(final_msg);
+    });
+    socket.on('disconnect', () => {
+      console.log('🔥: A user disconnected');
+    });
+});
+
 
 //Database users 
 db_admin = db.db_admin;
@@ -690,6 +716,29 @@ app.post('/give_feedback', (req, res) => {
         }
         res.send({"Message":"Successfully saved review"});
     })
+})
+app.post('/chat',(req,res) => {
+    console.log("in chat get:"+req.body.username)
+    const username=req.body.username
+    db_freelancer.query("SELECT freelancer_ID,message FROM chat WHERE project_ID='PID5';",(err,result) =>{
+        if (err) throw err;
+        console.log('chat'+result);
+        const f_ID = result.map(row => row.freelancer_ID);
+        const chats_list = result.map(row => row.message);
+        q="select distinct(project_id) from chat where freelancer_id=(select freelancer_id from freelancer where username='"+username+"');"
+        console.log(q)
+        db_freelancer.query(q,(err,result) =>
+        {
+            if(err) throw err;
+            const project_id=result.map(row => row.project_id);
+            res.json({"freelancer_id":f_ID, "chats":chats_list, "project_id":project_id});
+        })
+        
+    })
+});
+
+app.post('/chat',(req,res) => {
+    console.log("final:"+final_msg)
 })
 
 //app listening on port 3000

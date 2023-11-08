@@ -6,6 +6,7 @@ body
   background-image: url('../public/bg3.png');
   background-size: cover;
   overflow-y: scroll;
+  overflow-y: scroll;
   height: 80%;
 }
 .button,.add_button,#submit_button,.submit_button,#chat_button
@@ -22,6 +23,18 @@ body
   width: 200px;
   border-color: #FA924C;
   cursor: pointer
+}
+
+.b_upload,#searchbar
+{
+  background-image:linear-gradient(to bottom right, #FA924C,#f9b486);
+  border-style:initial;
+  border-radius: 8px;
+  text-align: center;
+  font-size: large;
+  height: 40px;
+  width: 100px;
+
 }
 
 .b_upload,#searchbar
@@ -60,6 +73,7 @@ input:focus
   justify-content: center;
   align-items: center;
   height: 40vh;
+  height: 40vh;
 }
 
 .reg_label,.reg_f_label,.reg_c_label
@@ -96,6 +110,7 @@ input:focus
   width: 300px;
   border-radius: 22px;
   position: fixed;
+  top: 10%;
   top: 10%;
   left: 40%;
   background-image: linear-gradient(to bottom right,#f5883e,#FA924C);
@@ -165,6 +180,7 @@ li
   opacity: 0.95;
 }
 
+.f_details,#c_profile
 .f_details,#c_profile
 {
   float: inline-start;

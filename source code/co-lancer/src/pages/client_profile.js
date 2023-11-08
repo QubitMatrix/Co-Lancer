@@ -208,6 +208,7 @@ function ClientProfile()
         <div id="client_profile">
             <div id="details">
               <div id="c_profile">
+              
                 <ImageDisplay imageId={username}/>
                 <h3>Name: {profile?profile.person_name:''}</h3>
                 <h4>Username: {username}</h4>
