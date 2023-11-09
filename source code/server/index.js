@@ -8,12 +8,12 @@ const validate = require("./validate.js");
 const app = express();
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
-let final_msg=null
+//let final_msg=null
 const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 
-var http = require('http').Server(app);
+/*var http = require('http').Server(app);
 const PORT_CHAT = 4000;
 var socketIO = require('socket.io')(http, {
     cors:{
@@ -36,7 +36,7 @@ socketIO.on('connection', (socket) => {
     socket.on('disconnect', () => {
       console.log('🔥: A user disconnected');
     });
-});
+});*/
 
 
 //Database users 
@@ -64,12 +64,11 @@ app.post("/register_user", (req,res) => {
     const email_id = req.body.email;
     console.log(validate.validate_email(email_id));
     const password = req.body.password;
-    console.log(validate.validate_password(password));
     const username = req.body.username;
     console.log(validate.validate_username(username));
     const usertype = req.body.usertype;
 
-    if(!validate.validate_name(person_name) || !validate.validate_email(email_id) || !validate.validate_username(username) || !validate.validate_password(password))
+    if(!validate.validate_name(person_name) || !validate.validate_email(email_id))
     {
         res.send({"Message":"Invalid inputs(Name should contain only letters (maxlength 80), Username should start with letter and have only letters,digits and _ (maxlength 30), Password can only contain letters, digits and @ # $ ! % & (8 to 30 length)"})
     }
@@ -99,7 +98,11 @@ app.post("/register_user", (req,res) => {
                 {
                     res.send({"Message":"Username taken"});
                 }
-            } throw err;
+                else
+                {
+                    throw err
+                }
+            } 
             console.log(result);
         });
         res.send({"Message":"User registered"}); //without this no response sent to frontend
@@ -132,15 +135,10 @@ app.post("/register_freelancer", (req, res) => {
 
             //Insert freelancer details into the freelancer table
             var insert_query = "INSERT INTO freelancer VALUE('FID" + freelancer_count + "', '" + dob + "', '" + country + "', 0, '" + username + "');";
+            console.log(insert_query);
             db_freelancer.query(insert_query, function(err, result) {
                 if(err) throw err;
                 console.log(result);
-
-                //Update the freelancer_count if successfully inserted
-                db_freelancer.query("UPDATE counter SET freelancer_count = freelancer_count+1", function(err,result) {
-                    if(err) throw err;
-                    console.log(result);
-                });
             });
 
             //Group all the education details and form a query
@@ -204,7 +202,7 @@ app.post("/register_freelancer", (req, res) => {
             for (let i=0;i<socials.length;i++)
             {
                 console.log(validate.validate_letters(socials[i]["media"],30)+" "+validate.validate_username(socials[i]["userhandle"]));
-                if(validate.validate_letters(socials[i]["media"],30) && validate_username(socials[i]["userhandle"]))
+                if(validate.validate_letters(socials[i]["media"],30) && validate.validate_username(socials[i]["userhandle"]))
                 {
                     temp += "('FID" + freelancer_count + "', '" + socials[i]["media"] + "', '" + socials[i]["userhandle"] + "'),";
                 }
@@ -251,12 +249,6 @@ app.post("/register_client", (req, res) => {
             db_client.query(insert_query, function(err, result) {
                 if(err) throw err;
                 console.log(result);
-
-                //Update the client_count if successfully inserted
-                db_client.query("UPDATE counter SET client_count=client_count+1", function(err,result) {
-                    if(err) throw err;
-                    console.log(result);
-                });
             });
         });
     }
@@ -486,12 +478,6 @@ app.post("/publish", (req, res) => {
                 if(err) throw err;
                 console.log(result);
 
-                //Update the project_count if successfully inserted
-                db_client.query("UPDATE counter SET project_count=project_count+1", function(err,result) {
-                    if(err) throw err;
-                    console.log(result);
-                });
-
                 //Convert domains string to a query for insertion
                 let list1 = "";
                 for(let i=0;i<domains.length;i++)
@@ -717,6 +703,8 @@ app.post('/give_feedback', (req, res) => {
         res.send({"Message":"Successfully saved review"});
     })
 })
+
+/*
 app.post('/chat',(req,res) => {
     console.log("in chat get:"+req.body.username)
     const username=req.body.username
@@ -740,6 +728,8 @@ app.post('/chat',(req,res) => {
 app.post('/chat',(req,res) => {
     console.log("final:"+final_msg)
 })
+*/
+
 
 //app listening on port 3000
 app.listen(3000,() => {
