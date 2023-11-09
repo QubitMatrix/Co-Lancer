@@ -16,6 +16,11 @@ function CreateProject()
       e.preventDefault();
       const {name, value}=e.target;
       setInputs({...inputs,[name]:value});
+      //Highlight radiobutton
+      if(name === "collab" && value === "NO")
+        document.getElementById("collab_n").innerHTML=`<input id="collab_no" type="radio" name="collab" value="NO" checked onClick={handleChange} />`;
+      if(name === "collab" && value === "YES")
+        document.getElementById("collab_y").innerHTML=`<input id="collab_yes" type="radio" name="collab" value="YES" checked onClick={handleChange} required/>`;
     }
 
     const handleSubmit = async(e) => {
@@ -65,15 +70,20 @@ function CreateProject()
                 <label>Budget(Rs.)</label> <br/> <input className='reg_input' type="number" name="budget" value={inputs.budget} placeholder="Project Budget" onChange={handleChange} required /> <br/>
                 <label>Timeline(Days)</label> <br/> <input className='reg_input' type="number" name="timeline" value={inputs.timeline} placeholder="Project Timeline" onChange={handleChange} required /> <br/>
                 <label>Collaboration?</label><br/>
-                <input id="collab_yes" type="radio" name="collab" value="YES" checked={inputs.collab==="YES"} onClick={handleChange} />
+                <div id="collab_y">
+                <input id="collab_yes" type="radio" name="collab" value="YES" onClick={handleChange} required />
+                </div>
                 <label className='collab_label' htmlFor="collab_yes">YES</label> <br/>
-                <input id="collab_no" type="radio" name="collab" value="NO" checked={inputs.collab==="NO"} onClick={handleChange} />
+                <div id="collab_n">
+                <input id="collab_no" type="radio" name="collab" value="NO" onClick={handleChange} />
+                </div>
                 <label className='collab_label' htmlFor="collab_no">NO</label> <br/> <br/>
                 <button className='button' type="submit">Publish</button>
             </form> 
             <br/>
             <div id="upload_project_pdf">
                 <FileUpload project_title={inputs.title} />
+                <br/><br/>
             </div>
         </div>
     )

@@ -16,7 +16,11 @@ function RegistrationForm()
       e.preventDefault(); //prevents page refreshing after form submission
       const {name, value} = e.target; //destructuring assignment to extract name and value from target DOM element
       setInputs({...inputs, [name]:value});
-      console.log(name+" "+value);
+      //Highlight radiobutton
+      if(name == "usertype" && value == "Freelancer")
+        document.getElementById("usertype_freelancer").innerHTML=`<input id="user_type_1" type="radio" name="usertype" value="Freelancer" checked onClick={handleChange} required/>`;
+      if(name == "usertype" && value == "Client")
+        document.getElementById("usertype_2").innerHTML=`<input id="user_type_2" type="radio" name="usertype" value="Client" checked onClick={handleChange} required/>`;
     }
 
     const handleSubmit = async(e) => {
@@ -72,11 +76,15 @@ function RegistrationForm()
           <label className='reg_label'>Username</label> &nbsp;
           <input id="username" className="reg_input" type="text" name="username" value={inputs.username} onChange={handleChange} required /> <br/>
           <label><abbr className='reg_label' title="Include atleast one lowercase, one uppercase, one digit and one special symbol. Min length 8 and max length 30">Password</abbr></label> &nbsp;
-          <input id="password" className="reg_input" type="password" name="password" value={inputs.password} onChange={handleChange} pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@ # $ ! % &]).{8,30}" required /> <br/>
+          <input id="password" className="reg_input" type="password" name="password" value={inputs.password} onChange={handleChange} pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#\$!%&])(?!.*[^a-zA-Z0-9@#\$!%&]).{8,30}$" required /> <br/>
           <label className='reg_label'>Are you a: </label> <br/>
-          <input id="user_type_1" type="radio" name="usertype" value="Freelancer" checked={inputs.usertype==="Freelancer"} onClick={handleChange} />
+          <div id="usertype_freelancer">
+          <input id="user_type_1" type="radio" name="usertype" value="Freelancer"  onClick={handleChange} required/>
+          </div>
           <label className='reg_label' htmlFor="user_type_1">Freelancer</label> <br/>
-          <input id="user_type_2" type="radio" name="usertype" value="Client" checked={inputs.usertype==="Client"} onClick={handleChange} />
+          <div id="usertype_client">
+          <input id="user_type_2" type="radio" name="usertype" value="Client"  onClick={handleChange}/>
+          </div>
           <label className='reg_label' htmlFor="user_type_2">Client</label> <br/> <br/>
           <button className='button' type="submit">Submit</button>
         </form>
