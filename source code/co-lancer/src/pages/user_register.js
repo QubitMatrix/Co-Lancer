@@ -61,24 +61,30 @@ function RegistrationForm()
     }
   
     return (
-      <div>
+      <div className='reg-page'>
         <h1 className='text-4xl text-center pt-9'>Register</h1>
+        <br/>
         <div className='reg_div'>
         <form id="reg_form" onSubmit={handleSubmit}>
           <label className='reg_label'>Name</label> &nbsp;
           <input id="name" className="reg_input" type="text" name="person_name" value={inputs.person_name} onChange={handleChange} required /> <br/>
+          <br/>
           <label className='reg_label'>Email ID</label> &nbsp;
           <input id="email_id" className="reg_input" type="email" name="email" value={inputs.email} onChange={handleChange} required /> <br/>
+          <br/>
           <label className='reg_label'>Username</label> &nbsp;
           <input id="username" className="reg_input" type="text" name="username" value={inputs.username} onChange={handleChange} required /> <br/>
-          <label><abbr className='reg_label' title="Include atleast one lowercase, one uppercase, one digit and one special symbol. Min length 8 and max length 30">Password</abbr></label> &nbsp;
-          <input id="password" className="reg_input" type="password" name="password" value={inputs.password} onChange={handleChange} pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@ # $ ! % &]).{8,30}" required /> <br/>
+          <br/>
+          <label><abbr className='reg_label' title="Include atleast one lowercase, one uppercase, one digit and one special symbol. Min length 8">Password</abbr></label> &nbsp;
+          <input id="password" className="reg_input" type="password" name="password" value={inputs.password} onChange={handleChange} pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@ # $ ! % &]).{8,}" required /> <br/>
+          <br/>
           <label className='reg_label'>Are you a: </label> <br/>
           <input id="user_type_1" type="radio" name="usertype" value="Freelancer" checked={inputs.usertype==="Freelancer"} onClick={handleChange} />
           <label className='reg_label' htmlFor="user_type_1">Freelancer</label> <br/>
           <input id="user_type_2" type="radio" name="usertype" value="Client" checked={inputs.usertype==="Client"} onClick={handleChange} />
           <label className='reg_label' htmlFor="user_type_2">Client</label> <br/> <br/>
           <button className='button' type="submit">Submit</button>
+          <br/>
         </form>
         </div>
       </div>
@@ -86,4 +92,3 @@ function RegistrationForm()
 }
   
 export default RegistrationForm;
-
