@@ -67,7 +67,7 @@ function Login()
             <label className='reg_label'>Username</label> &nbsp; <br/>
             <input id="login-username" className="reg_input" type="text" name="username" value={inputs.username} onChange={handleChange} required /> <br/> <br/>     
             <label className='reg_label'>Password</label> &nbsp; <br/>
-            <input id="login-password" className="reg_input" type="password" name="password" value={inputs.password} onChange={handleChange} required /> <br/> <br/> 
+            <input id="login-password" className="reg_input" type="password" name="password" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#\$!%&])(?!.*[^a-zA-Z0-9@#\$!%&]).{8,30}$"  value={inputs.password} onChange={handleChange} required /> <br/> <br/> 
             <br/> 
             <button className="button" id ="b_login" type="submit">Log In</button>
           </form>
