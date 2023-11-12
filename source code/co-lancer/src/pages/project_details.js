@@ -28,17 +28,11 @@ function ProjectDetails()
         }
     }
 
-    
-
-
     //call the aggregate function for forming each list
     aggregate(project_state[6]? project_state[6].split(",") : [],domains_arr);
     aggregate(project_state[7]? project_state[7].split(",") : [],skills_arr);
     aggregate(project_state[8]? project_state[8].split(",") : [],freelancers_arr);
-
     
-    console.log(domains_arr);
-
     //Page rendered for project_details
     return(<div>
         <h2>{project_state[1]}</h2>

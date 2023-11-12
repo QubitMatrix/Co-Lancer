@@ -45,8 +45,8 @@ function CreateProject()
         }
         else
         {
-          console.log("Project published");
-          alert("Project published. You will now be required to upload the pdf");
+          const data = await response.json();
+          alert(data.Message);
           
           //Display upload option
           const div1 = document.getElementById("upload_project_pdf")
@@ -56,7 +56,7 @@ function CreateProject()
 
       catch(err)
       {
-        console.error(err);
+        alert("Server unreachable, try again later."+err);
       }
     }
 
@@ -71,11 +71,11 @@ function CreateProject()
                 <label>Timeline(Days)</label> <br/> <input className='reg_input' type="number" name="timeline" value={inputs.timeline} placeholder="Project Timeline" onChange={handleChange} required /> <br/>
                 <label>Collaboration?</label><br/>
                 <div id="collab_y">
-                <input id="collab_yes" type="radio" name="collab" value="YES" onClick={handleChange} required />
+                  <input id="collab_yes" type="radio" name="collab" value="YES" onClick={handleChange} required />
                 </div>
                 <label className='collab_label' htmlFor="collab_yes">YES</label> <br/>
                 <div id="collab_n">
-                <input id="collab_no" type="radio" name="collab" value="NO" onClick={handleChange} />
+                  <input id="collab_no" type="radio" name="collab" value="NO" onClick={handleChange} />
                 </div>
                 <label className='collab_label' htmlFor="collab_no">NO</label> <br/> <br/>
                 <button className='button' type="submit">Publish</button>
@@ -83,7 +83,7 @@ function CreateProject()
             <br/>
             <div id="upload_project_pdf">
                 <FileUpload project_title={inputs.title} />
-                <br/><br/>
+                <br/><br/><br/>
             </div>
         </div>
     )

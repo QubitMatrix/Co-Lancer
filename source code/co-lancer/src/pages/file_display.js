@@ -12,7 +12,6 @@ const PdfDisplay = () => {
   useEffect(() => {
     // Replace 'pdfId' with the ID of the PDF you want to display
     const pdfId = state["title"]; // Change this to the desired PDF ID
-    console.log(state)
 
     //Hit backend to retrieve file data
     fetch(`http://localhost:3000/display_pdf/${pdfId}`)
@@ -27,7 +26,7 @@ const PdfDisplay = () => {
         setPdfData(pdfUrl);
       })
       .catch((error) => {
-        console.error(error);
+        alert(error);
       });
   }, []);
 

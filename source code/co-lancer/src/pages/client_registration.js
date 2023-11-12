@@ -37,8 +37,8 @@ function RegisterClient()
 
         if(response.ok)
         {
-          console.log("successfully submitted");
-          alert("Registration successful,you will now be required to select a profile picture.");
+          const data = await response.json()
+          alert(data.Message);
           
           //Display file upload
           const div1 = document.getElementById("upload_profile_placeholder")
@@ -46,12 +46,12 @@ function RegisterClient()
         }
         else 
         {
-          console.log("didn't submit");
+          alert("Failed to register, server error");
         }
       }
       catch(err)
       {
-        console.error(err);
+        alert("Server is unreachable, try again later."+err)
       }
     }
 
@@ -70,9 +70,9 @@ function RegisterClient()
           <br/>
           <div id="upload_profile_placeholder">
             <ImageUpload  username={inputs.username} /> 
+            <br/><br/>
           </div>
         </form>
-        <br/>
       </div>
     );
 }

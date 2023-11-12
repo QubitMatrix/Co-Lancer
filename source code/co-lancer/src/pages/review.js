@@ -39,7 +39,7 @@ function Review()
             }
             catch(err)
             {
-                console.error(err);
+                alert("Server unreachable, try later."+err);
             }   
         }
         fetchData();

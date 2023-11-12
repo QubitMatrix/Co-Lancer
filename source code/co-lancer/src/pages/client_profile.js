@@ -6,9 +6,9 @@ import ImageDisplay from './image_display';
 //Profile page view of client
 function ClientProfile()
 {
-    
+    //Access state details from previous component
     const {state} = useLocation();
-    const username=state.username;
+    const username = state.username;
 
     const navigate = useNavigate();    
 
@@ -20,7 +20,7 @@ function ClientProfile()
     
     //Handle finalizing of project from client
     const handleFinalizeClick = async (project_id) => {
-      console.log("abc"+project_id);
+      console.log("Project ID: "+project_id);
 
       const serverUrl = "http://localhost:3000/finalize_project";
       try 
@@ -35,22 +35,23 @@ function ClientProfile()
 
         if(response.ok)
         {
-          console.log("successfully reviewed");
+          const data = await response.json();
+          alert(data.Message);
         }
         else
         {
-          console.log("didn't submit");
+          alert("Error in review");
         }
       }
       catch(err)
       { 
-        console.error(err);
+        alert("Server unreachable, try again later."+err)
       }
     }
 
     //Handle return of project ffrom client
     const handleReturnClick = async (project_id) => {
-      console.log("abc"+project_id);
+      console.log("Project_id"+project_id);
 
       const serverUrl = "http://localhost:3000/return_project";
       try 
@@ -65,16 +66,17 @@ function ClientProfile()
 
         if(response.ok)
         {
-          console.log("successfully returned");
+          const data = await response.json();
+          alert(data.Message);
         }
         else
         {
-          console.log("didn't submit");
+          alert("Error in submit");
         }
       }
       catch(err)
       { 
-        console.error(err);
+        alert("Server unreachable, try again later."+err);
       }
     }
 
@@ -107,7 +109,7 @@ function ClientProfile()
         } 
         catch(err)
         {
-          console.error(err);
+          alert("Server unreachable, try again."+err);
         }
       }
       fetchData();
@@ -116,7 +118,7 @@ function ClientProfile()
     //Handle when feedback is submitted
     const handleFeedbackSubmit = async (e,project_id,index) => {
       e.preventDefault();
-      console.log(index);
+      console.log("Index"+index);
       console.log("Feedback"+project_id+inputs.review+inputs.rating+username);
       const serverUrl = "http://localhost:3000/give_feedback";
 
@@ -136,12 +138,13 @@ function ClientProfile()
           }
           else
           {
-            console.log(response.json());
+            const data = await response.json()
+            alert(data.Message);
           }
       }
       catch(err)
       {
-        console.error(err);
+        alert("Server unreachable, try again later."+err);
       }
       document.getElementsByClassName("feedback_div")[index].style.display="none";
     }
@@ -208,13 +211,12 @@ function ClientProfile()
         <div id="client_profile">
             <div id="details">
               <div id="c_profile">
-              
                 <ImageDisplay imageId={username}/>
                 <h3>Name: {profile?profile.person_name:''}</h3>
                 <h4>Username: {username}</h4>
                 <h4>Organization: {profile?profile.company:''} </h4>
                 <br/> 
-                </div>
+              </div>
               <div id="c_proj">
                 <h3>Existing projects</h3>
                 <ul>
@@ -226,8 +228,7 @@ function ClientProfile()
                 </ul>
                 <br/>
                 <button className="button" onClick={()=>navigate("/create_project", {state:{username:username}})}>Create New Project</button>
-                </div>
-               
+              </div>
             </div>
         </div>
     )

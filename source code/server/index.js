@@ -96,16 +96,19 @@ app.post("/register_user", (req,res) => {
             {
                 if(err.errno === 1062)
                 {
-                    res.send({"Message":"Username taken"});
+                    res.send({"Message":"Username or email taken"});
                 }
                 else
                 {
                     throw err
                 }
             } 
-            console.log(result);
+            else
+            {
+                console.log(result);
+                res.send({"Message":"Successfully registered"}); //without this no response sent to frontend
+            }
         });
-        res.send({"Message":"User registered"}); //without this no response sent to frontend
     }
 });
 
@@ -150,10 +153,6 @@ app.post("/register_freelancer", (req, res) => {
                 {
                     temp += "('FID" + freelancer_count + "', '" + educations[i]["degree"] + "', " + educations[i]["year_of_grad"] + "),";     
                 }
-                else
-                {
-                    res.send({"Message":"Degree should be only alphanumeric(max 30 characters), year can be only 4 digits"});
-                }
             }
 
             if(temp.length != 0)
@@ -179,10 +178,6 @@ app.post("/register_freelancer", (req, res) => {
                     {
                         temp += "('FID" + freelancer_count + "', '" + skills[i]["skill"] + "', '" + skills[i]["experience"] + "'),";
                     }
-                    else
-                    {
-                        res.send({"Message":"Skill should be only alphanumeric(max 30 characters)"});
-                    }
                 }
                 if(temp.length != 0)
                 {
@@ -195,8 +190,7 @@ app.post("/register_freelancer", (req, res) => {
                 }
             }
 
-            
-
+        
             //Group all the social details and form a query
             temp="";
             for (let i=0;i<socials.length;i++)
@@ -205,10 +199,6 @@ app.post("/register_freelancer", (req, res) => {
                 if(validate.validate_letters(socials[i]["media"],30) && validate.validate_username(socials[i]["userhandle"]))
                 {
                     temp += "('FID" + freelancer_count + "', '" + socials[i]["media"] + "', '" + socials[i]["userhandle"] + "'),";
-                }
-                else
-                {
-                    res.send({"Message":"media should be only letters(max 30 characters) and userhandle should start with letter and have only letters,digits and _ (maxlength 30) "});
                 }
             }
             insert_query = "INSERT INTO freelancer_socials VALUES " + temp.slice(0,temp.length-1) + ";";
@@ -219,7 +209,7 @@ app.post("/register_freelancer", (req, res) => {
                 console.log(result);
             });     
         });
-        res.send({"message":"Freelancer registered"});
+        res.send({"Message":"Registration successful, you will now be required to select a profile picture."});
     }
     else
     {
@@ -249,6 +239,7 @@ app.post("/register_client", (req, res) => {
             db_client.query(insert_query, function(err, result) {
                 if(err) throw err;
                 console.log(result);
+                res.send({"Message":"Registration successful,you will now be required to select a profile picture."});
             });
         });
     }
@@ -256,7 +247,6 @@ app.post("/register_client", (req, res) => {
     {
         res.send({"Message":"Invalid country or company name(max 30 letters or - only)"})
     }
-    res.send({"Message":"Client registered"});
 });
 
 //Route for authentication
@@ -272,7 +262,7 @@ app.post("/authenticate", (req, res) => {
             const stored_password = result.map(row => row.password);
             const usertype = result.map(row => row.user_type);
             if(stored_password.length == 0)
-                res.json({"message":"Username not found"});
+                res.json({"Message":"Username not found"});
             else 
             {
                 //compare if the password entered on hashing gives the hashed-password stored in the database 
@@ -280,14 +270,14 @@ app.post("/authenticate", (req, res) => {
                 bcrypt.compare(password, stored_password[0])
                 .then( match => { 
                     if(! match) 
-                        res.json({"message": "Wrong Password"});
+                        res.json({"Message": "Wrong Password"});
                     else
                     {
                         console.log(usertype[0])
                         if(usertype[0] === "Freelancer")
-                            res.json({"message": "Freelancer"}); 
-                        if(usertype[0] === "Client")
-                            res.json({"message":"Client"});
+                            res.json({"Message": "Freelancer"}); 
+                        else if(usertype[0] === "Client")
+                            res.json({"Message":"Client"});
                     }
                 });
             }
@@ -374,7 +364,7 @@ app.post("/client_profile", (req, res) => {
 //Route to extract and send project details
 app.post("/projects", (req, res) => {
     let domain = req.body.domain_name.trim();
-    console.log(domain);
+    console.log("Domain"+domain);
     console.log(validate.validate_letters(domain,30))
     if(validate.validate_letters(domain,30))
     {
@@ -402,7 +392,7 @@ app.post("/projects", (req, res) => {
 
             //zip all project details together
             const project_details = zip([id, title, desc, status, budget, timeline, domains, skills, freelancers, colab]);
-            console.log(project_details);
+            console.log("Project details"+project_details);
             res.send({"projects": project_details});
         });
     }
@@ -442,10 +432,10 @@ app.post("/join_project", (req, res) => {
 
 //Route to retrieve reviews for a given freelancer
 app.post("/get_reviews", (req, res) => {
-    db_user.query("SELECT freelancer_ID, client_ID, review, rating FROM reviews WHERE freelancer_id='" + req.body.f_id + "';", (err, result) => {
+    db_user.query("SELECT freelancer_ID, client_username, review, rating FROM reviews WHERE freelancer_id='" + req.body.f_id + "';", (err, result) => {
         if(err) throw err;
         console.log(result);
-        const client_IDs = result.map(row => row.client_ID);
+        const client_IDs = result.map(row => row.client_username);
         const reviews = result.map(row => row.review);
         const ratings = result.map(row => row.rating);
         res.json({"clients":client_IDs, "reviews":reviews, "ratings":ratings});
@@ -518,7 +508,7 @@ app.post("/publish", (req, res) => {
                 }
             });
         });
-        res.send({"Message":"hello"});
+        res.send({"Message":"Project published. You will now be required to upload the pdf"});
     }
     
     else
@@ -543,7 +533,8 @@ app.post('/upload_profile', upload.single('profile_pic'), (req, res) => {
  
     // Store the image in the MySQL database
     db_user.query('INSERT INTO image SET ?', image, (err, result) => {
-      if (err) {
+      if (err) 
+      {
         console.error('Error storing image in MySQL:', err);
         return res.status(500).json({ error: 'Image upload failed' });
       }
@@ -588,8 +579,6 @@ app.post('/upload_pdf', upload.single('pdf'), (req, res) => {
     contentType: req.file.mimetype,
   };
 
-  console.log(req.body.project_title);
-
   db_client.query('INSERT INTO project_pdf SET ?', pdf, (err, result) => {
     if (err) 
     {
@@ -627,19 +616,18 @@ app.post('/submit_project', (req, res) => {
     const url = req.body.url;
     const project_id = req.body.project_id;
 
-    console.log(url+project_id+":"+validate.validate_url(url));
     if(validate.validate_url(url))
     {
         //Update the url field s tat client can access link
         const query = "UPDATE project SET url='" + url + "' WHERE project_ID='" + project_id + "';";
         db_client.query(query, (err, result) => {
             if(err) throw err;
+            res.send({"Message":"Successfully handed off project, it will be reviewed by client"}); 
         });
-        res.send({"Message":"Successfully handed off"}); 
     }
     else
     {
-        res.send({"Message":"Error in handing off"});
+        res.send({"Message":"Error in handing off, ensure url follows the character constraints"});
     }
 });
 
@@ -652,7 +640,7 @@ app.post('/finalize_project', (req, res) => {
     const query = "UPDATE project SET status='Completed' WHERE project_ID='" + project_id + "';";
     db_client.query(query, (err, result) => {
         if(err) throw err;
-        res.send();
+        res.send({"Message":"Project Successfully finalized"});
     })
 })
 
@@ -665,7 +653,7 @@ app.post('/return_project', (req, res) => {
     const query = "UPDATE project SET url="+null+" WHERE project_ID='" + project_id + "';";
     db_client.query(query, (err, result) => {
         if(err) throw err;
-        res.send();
+        res.send({"Message":"Project successfully returned"});
     })
 })
 
@@ -682,7 +670,6 @@ app.post('/give_feedback', (req, res) => {
     db_client.query(query, (err, result) => {
         if(err) throw err;
         const freelancers = result.map(row => row.freelancer_ID);
-        console.log(freelancers);   
         
         for(let i=0;i<freelancers.length;i++)
         {

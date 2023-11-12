@@ -51,17 +51,19 @@ function FreelancerProfile()
 
         if(response.ok)
         {
-          console.log("successfully submitted");
-          document.getElementsByClassName("handoff_div")[count].style.display="none"; // Remove textarea and submit once it is submitted
+          const data = await response.json();
+          alert(data.Message);
+          if(data.Message.includes("Successfully"))
+            document.getElementsByClassName("handoff_div")[count].style.display="none"; // Remove textarea and submit once it is submitted
         }
         else
         {
-          console.log("didn't submit");
+          alert("Couldn't handoff the project");
         }
       }
       catch(err)
       { 
-        console.error(err);
+        alert("Server unreachable, try agian later."+err);
       }
     }
 
@@ -90,14 +92,17 @@ function FreelancerProfile()
             throw new Error("HTTP error, " + response.status);
           }
 
-          //Wait till the server gives the reply and then use that data
-          const data = await response.json();
-          setProfile(data);
-          console.log(JSON.stringify(data));
+          else
+          {
+            //Wait till the server gives the reply and then use that data
+            const data = await response.json();
+            setProfile(data);
+            console.log("Freelancer profile data"+JSON.stringify(data));
+          }
         } 
         catch(err)
         {
-          console.error(err);
+          alert("Server unreachable, try again later")
         }
       }
       fetchData();
@@ -114,7 +119,6 @@ function FreelancerProfile()
       if(profile !== null)
       {
         var skills = profile.skills;
-        console.log(skills);
       } 
       else
       {
@@ -124,7 +128,7 @@ function FreelancerProfile()
       {
         skills_arr.push(<li>{skills[i][0]} - {skills[i][1]}</li>);
       }
-      console.log("abc"+skills_arr);
+      console.log("Skills div"+skills_arr);
     }
     
     //Combine all the socials and insert into an unordered list
@@ -132,7 +136,6 @@ function FreelancerProfile()
       if(profile !== null)
       {
         var socials = profile.socials;
-        console.log(socials);
       } 
       else
       {
@@ -142,7 +145,7 @@ function FreelancerProfile()
       {
         socials_arr.push(<li>{socials[i][0]} - {socials[i][1]}</li>);
       }
-      console.log("abc"+socials_arr);
+      console.log("Socials div"+socials_arr);
     }
 
     //Combine all the current and completed projects and insert into unordered lists
@@ -150,7 +153,6 @@ function FreelancerProfile()
       if(profile !== null)
       {
         var projects = profile.projects;
-        console.log(projects);
       } 
       else
       {
@@ -180,7 +182,7 @@ function FreelancerProfile()
                 <button className="project_handoff button" onClick={(e)=>handleSubmit(e,j)}>Submit</button>
               </div>
             </li>
-            </div>);
+          </div>);
         }
       }
     }
@@ -194,24 +196,24 @@ function FreelancerProfile()
     return (
       <div id="freelancer_profile">
         <div className='f_details'>
-        <div className='f_personal'>
-          <ImageDisplay imageId={username}/>
-          <h3>{username}</h3>
-          <h4>Skill Set</h4>
-          <ul>
-            {skills_arr}
-          </ul>
-          <h4>Social Accounts</h4>
-          <ul>
-            {socials_arr}
-          </ul>
-        </div>
-        <div>        
-        <h4>Cookie Jar</h4>
-        <p>{profile !== null ? profile.cookies : "Loading..."}</p>
-        <button id="chat_button" onClick={() => navigate("/chat",{state:{username:username}})}>Chat</button>
-        </div>
-        <br/>
+          <div className='f_personal'>
+            <ImageDisplay imageId={username}/>
+            <h3>{username}</h3>
+            <h4>Skill Set</h4>
+            <ul>
+              {skills_arr}
+            </ul>
+            <h4>Social Accounts</h4>
+            <ul>
+              {socials_arr}
+            </ul>
+          </div>
+          <div>        
+            <h4>Cookie Jar</h4>
+            <p>{profile !== null ? profile.cookies : "Loading..."}</p>
+            <button id="chat_button" onClick={() => navigate("/chat",{state:{username:username}})}>Chat</button>
+          </div>
+          <br/>
         </div>
 
         <div id="project_gallery">

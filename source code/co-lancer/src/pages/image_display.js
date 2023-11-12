@@ -19,7 +19,7 @@ function ImageDisplay (props)
         setImageData(imageUrl); //Store the url in state variable imageData
       })
       .catch((error) => {
-        console.error(error);
+        alert(error);
       });
   }, []);
 

@@ -6,20 +6,18 @@ import { useLocation } from 'react-router-dom';
 //Registration page extension, for freelancer
 function RegisterFreelancer()
 {
-    /*del_education=()=>{
-      console.log("val")
-    }*/
     const [education_details, set_education_details] = useState([]);
     const [skill_details, set_skill_details] = useState([]);
     const [social_details, set_social_details] = useState([]);
     const [inputs, set_inputs] = useState({});
-
 
     //Access state details from previous component
     const {state} = useLocation();
     const username = state.username;
     inputs["username"] = username;
 
+    useEffect(()=>{alert("Degree should be only alphanumeric(max 30 characters), year can be only 4 digits. Skill should be only alphanumeric(max 30 characters). media should be only letters(max 30 characters) and userhandle should start with letter and have only letters,digits and _ (maxlength 30)")},[])
+    
     //clear the input fields for next entry
     useEffect(()=>{
       document.getElementById("degree").value="";
@@ -36,7 +34,6 @@ function RegisterFreelancer()
       document.getElementById("userhandle").value="";
     },[social_details]);
 
-
     //handles changes in input fields and hooks them with the `inputs` variable
     const handleChange = (e) => {
       e.preventDefault(); //prevents page refreshing after form submission
@@ -48,7 +45,6 @@ function RegisterFreelancer()
     const handleSubmit = async (e) => {
       e.preventDefault();
       console.log("Form submitted");
-      console.log("inputs" + JSON.stringify(inputs));
       inputs["educations"] = JSON.stringify(education_details);
       inputs["skills"] = JSON.stringify(skill_details);
       inputs["socials"] = JSON.stringify(social_details);
@@ -67,21 +63,25 @@ function RegisterFreelancer()
 
         if (response.ok)
         {
-          console.log("successfully submitted");
-          alert("Registration successful, you will now be required to select a profile picture.");
+          let data = await response.json();
+          alert(data.Message)
           
-          //Display file upload
-          const div1 = document.getElementById("upload_profile_placeholder")
-          div1.style.display = "block";
+          if(data.Message.includes("profile"))
+          {
+            console.log("huh")
+            //Display file upload
+            const div1 = document.getElementById("upload_profile_placeholder")
+            div1.style.display = "block";
+          }
         }
         else 
         {
-          console.log("didn't submit");
+          alert("Failed to register, server error")
         }
       }
       catch (err) 
       {
-        console.error(err);
+        alert("Server unreachable, try again later."+err);
       }   
     }
 
@@ -91,14 +91,13 @@ function RegisterFreelancer()
       //extract values from input fields
       const degree_val = document.getElementById("degree").value;
       const year_of_grad_val = document.getElementById("year_of_grad").value;
-      console.log(degree_val + " " + year_of_grad_val);
+      console.log("Added"+degree_val + " " + year_of_grad_val);
 
       //Create new entries for entered details if input area is not empty 
       if(degree_val && year_of_grad_val)
       {
         const new_education = {"degree":degree_val, "year_of_grad": year_of_grad_val};
         set_education_details([...education_details,new_education]);
-        console.log(JSON.stringify(education_details)+"xx");     
       
         //add each entry as a list element
         const edu_div = document.createElement("div");
@@ -114,14 +113,13 @@ function RegisterFreelancer()
       //extract values from input fields
       const skill_val = document.getElementById("skill").value;
       const experience_val = document.getElementById("experience").value;
-      console.log(skill_val+" "+experience_val);
+      console.log("Added"+skill_val+" "+experience_val);
 
       //Create new entries for entered details if input area is not empty 
       if(skill_val && experience_val)
       {
         const new_skill = {"skill":skill_val, "experience": experience_val};
         set_skill_details([...skill_details,new_skill]);
-        console.log(JSON.stringify(skill_details)+"xx");
        
         //add each entry as a list element
         const skill_div = document.createElement("div");
@@ -137,14 +135,13 @@ function RegisterFreelancer()
       //extract values from input fields
       const media_val = document.getElementById("media").value;
       const userhandle_val = document.getElementById("userhandle").value;
-      console.log(media_val+" "+userhandle_val);     
+      console.log("Added"+media_val+" "+userhandle_val);     
 
       //Create new entries for entered details if input area is not empty 
       if(media_val && userhandle_val)
       {
         const new_social = {"media":media_val, "userhandle": userhandle_val};
         set_social_details([...social_details,new_social]);
-        console.log(JSON.stringify(social_details)+"xx");
         
         //add each entry as a list element
         const social_div = document.createElement("div");
@@ -157,7 +154,7 @@ function RegisterFreelancer()
     //Page to be rendered on invoking the RegisterFreelancer component
     return (
         <div className='reg_f_div'>
-          <h1 className='text-4xl text-center pt-4'>Freelancer</h1>
+          <h1 className='text-4xl text-center pt-4'>Freelancer</h1><br/>
           <div className='f_form_div'>
           <form id="reg_f_form"  onSubmit={handleSubmit}>
             <label className='reg_f_label'>Date of Birth</label> <input id="dob" className="reg_f_input" type="date" name="dob" value={inputs.dob} onChange={handleChange} required/> <br/>

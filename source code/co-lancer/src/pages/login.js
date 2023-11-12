@@ -36,10 +36,8 @@ function Login()
         })
         .then(response => response.json())
         .then(data => {
-          console.log(data);
-
           //check authentication and redirect to the profile page
-          const message = data["message"];
+          const message = data["Message"];
           if(message === "Username not found" || message === "Wrong Password")
           {
             alert(message);
@@ -50,11 +48,15 @@ function Login()
             alert("Successfully logged in");
             navigate("/" + message + "_profile", {state:{username: inputs["username"]}});
           }
+          else
+          {
+            alert(message)
+          }
         });        
       }
       catch(err)
       {
-        console.error(err);
+        alert("Server in unreachable, try again later."+err);
       }
     }
 

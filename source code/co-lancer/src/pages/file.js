@@ -40,7 +40,7 @@ function FileUpload(props)
 
         else
         {
-            alert("choose a file");
+            alert("Choose a file");
         }
 
     }

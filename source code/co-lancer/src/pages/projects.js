@@ -28,7 +28,7 @@ function ProjectPage()
   const handleSearch = async (e) => {
     try
     {
-        e.preventDefault();
+      e.preventDefault();  //prevent page refreshing
     }
     catch
     {
@@ -40,7 +40,7 @@ function ProjectPage()
 
         try 
         {
-            console.log(domain);
+            console.log("Domain"+domain);
             const response = await fetch(serverUrl, {
                 method: 'POST',
                 headers: {
@@ -51,15 +51,20 @@ function ProjectPage()
 
             if (!response.ok) 
             {
-                throw new Error("HTTP error, " + response.status);
+              throw new Error("HTTP error, " + response.status);
             }
 
-            const data = await response.json();
-            aggregate_projects(data); //aggregate and process the project details
+            else
+            {
+              const data = await response.json();
+              if(data.Message !== undefined)
+                alert(data.Message);
+              aggregate_projects(data); //aggregate and process the project details
+            }
         } 
         catch (err) 
         {
-            console.error(err);    
+          alert("Server unreachable, try again later."+err);    
         }
     }
   }
@@ -69,7 +74,7 @@ function ProjectPage()
     e.preventDefault();
     
     const p_id = e.target.value; 
-    console.log("abc"+f_id+"-"+p_id);
+    console.log("Joining"+f_id+"-"+p_id);
 
     //backend endpoint
     const serverUrl = "http://localhost:3000/join_project";
@@ -89,12 +94,15 @@ function ProjectPage()
             throw new Error("HTTP error, " + response.status);
         }
 
-        const data = await response.json();
-        alert(data["Message"]);
+        else
+        {
+          const data = await response.json();
+          alert(data["Message"]);
+        }
     } 
     catch (err) 
     {
-        console.error(err);
+        alert("Server unreachable, try again."+err);
     }
   }
 
@@ -158,6 +166,7 @@ function ProjectPage()
       <ul>
         {projects_arr.available_projects}
       </ul>
+      <br/>
       <h3>Completed Projects</h3>
       <ul>
         {projects_arr.completed_projects}

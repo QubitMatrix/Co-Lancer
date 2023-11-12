@@ -30,7 +30,6 @@ const ImageUpload = (props) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         alert('File uploaded successfully. You will be now be redirected to home page!');
         document.location = "/";
       })
@@ -44,7 +43,7 @@ const ImageUpload = (props) => {
   return (
     <div>
       <input type="file" accept="image/*" onChange={handleFileChange} />
-      <button onClick={handleUpload}>Upload</button>
+      <button onClick={handleUpload} className="button" >Upload</button>
     </div>
   );
 };
