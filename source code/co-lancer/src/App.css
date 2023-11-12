@@ -5,8 +5,7 @@ body
 {
   background-image: url('../public/bg3.png');
   background-size: cover;
-  overflow-y: scroll;
-  overflow-y: scroll;
+  overflow: auto;
   height: 80%;
 }
 .button,.add_button,#submit_button,.submit_button,#chat_button
@@ -99,29 +98,28 @@ input:focus
 {
   width: 300px;
   border-radius: 22px;
-  position: fixed;
-  top: 20%;
-  left: 40%;
+  margin-top: 10%;
+  margin-bottom: 10%;
+  margin-left: 40%;
   background-image: linear-gradient(to bottom right,#f5883e,#FA924C);
 }
 
 .reg-page,.reg_c_div
 {
-  width: 300px;
+  width: 350px;
   border-radius: 22px;
-  position: fixed;
-  top: 10%;
-  top: 10%;
-  left: 40%;
+  margin-top: 5%;
+  margin-bottom: 5%;
+  margin-left: 40%;
   background-image: linear-gradient(to bottom right,#f5883e,#FA924C);
 }
 .reg_f_div
 {
   width: 600px;
   border-radius: 22px;
-  position: fixed;
-  top: 10%;
-  left: 30%;
+  margin-top: 10%;
+  margin-bottom: 10%;
+  margin-left: 30%;
   padding-left: 50px;
   background-image: linear-gradient(to bottom right,#f5883e,#FA924C);
 }
@@ -240,16 +238,17 @@ li
 }
 .handoff_div, .feedback_div
 {
+  position: relative;
   display: none;
 }
 #upload_profile_placeholder 
 {
-  position: fixed;
+  position: relative;
   display: none;
 }
 #upload_project_pdf
 {
-  position: fixed;
+  position: relative;
   display: none;
 }
 
@@ -279,9 +278,9 @@ li
   padding-bottom: 30px;
   width: 600px;
   border-radius: 22px;
-  position: fixed;
-  top: 5%;
-  left: 30%;
+  margin-top: 5%;
+  margin-bottom: 5%;
+  margin-left: 30%;
   padding-left: 50px;
   background-image: linear-gradient(to bottom right,#f5883e,#FA924C);
 }
