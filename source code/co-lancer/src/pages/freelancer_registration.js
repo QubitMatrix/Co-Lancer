@@ -68,7 +68,6 @@ function RegisterFreelancer()
           
           if(data.Message.includes("profile"))
           {
-            console.log("huh")
             //Display file upload
             const div1 = document.getElementById("upload_profile_placeholder")
             div1.style.display = "block";
@@ -99,9 +98,26 @@ function RegisterFreelancer()
         const new_education = {"degree":degree_val, "year_of_grad": year_of_grad_val};
         set_education_details([...education_details,new_education]);
       
-        //add each entry as a list element
+        //create new div for skill entry
         const edu_div = document.createElement("div");
         edu_div.innerHTML = '<input type="text" class="degree_list ' + degree_val + '" value=' + degree_val + '></input> <input class="year_list ' + year_of_grad_val + '" type="text" value=' + year_of_grad_val + '></input><button class="delete_edu ' + degree_val + '">Delete</button>';
+        
+        //Get the delete button that is inside the education div
+        const education_delete_button = edu_div.querySelector(".delete_edu")
+        education_delete_button.addEventListener("click", () => {
+          // Remove the education div from the DOM
+          edu_div.remove();
+
+          //Remove the enducation entry from the state variable
+          set_education_details((prevEducationDetails) => {
+            const updatedEducationDetails = prevEducationDetails.filter(
+              (edu) => edu.degree !== degree_val
+            );
+            return updatedEducationDetails;
+          });
+        });
+
+        //add each entry as a list element
         const edu_list = document.getElementById("education_list");
         edu_list.appendChild(edu_div);
       }
@@ -121,9 +137,26 @@ function RegisterFreelancer()
         const new_skill = {"skill":skill_val, "experience": experience_val};
         set_skill_details([...skill_details,new_skill]);
        
-        //add each entry as a list element
+        //create new div for skill entry
         const skill_div = document.createElement("div");
-        skill_div.innerHTML = '<input type="text" class="skill_list ' + skill_val + '" value=' + skill_val + '></input> <input class="experience_list ' + experience_val + '" type="text" value=' + experience_val + '></input><button class="delete_edu ' + skill_val + '">Delete</button>';
+        skill_div.innerHTML = '<input type="text" class="skill_list ' + skill_val + '" value=' + skill_val + '></input> <input class="experience_list ' + experience_val + '" type="text" value=' + experience_val + '></input><button class="delete_skill ' + skill_val + '">Delete</button>';
+        
+        //Get the delete button that is inside the skill div
+        const skill_delete_button = skill_div.querySelector(".delete_skill")
+        skill_delete_button.addEventListener("click", () => { 
+          // Remove the skill div from the DOM
+          skill_div.remove();
+          
+          //Remove the skill entry from the state variable
+          set_skill_details((prevSkillDetails) => {
+            const updatedSkillDetails = prevSkillDetails.filter(
+              (skill) => skill.skill !== skill_val
+            );
+            return updatedSkillDetails;
+          });
+        });
+
+        //add each entry as a list element
         const skillset_list = document.getElementById("skillset_list");
         skillset_list.appendChild(skill_div);
       }
@@ -143,9 +176,26 @@ function RegisterFreelancer()
         const new_social = {"media":media_val, "userhandle": userhandle_val};
         set_social_details([...social_details,new_social]);
         
-        //add each entry as a list element
+        //create new div for social entry
         const social_div = document.createElement("div");
-        social_div.innerHTML = '<input type="text" class="media_list ' + media_val + '" value=' + media_val + '></input> <input class="userhandle_list ' + userhandle_val + '" type="text" value=' + userhandle_val + '></input><button class="delete_edu ' + media_val + '">Delete</button>';
+        social_div.innerHTML = '<input type="text" class="media_list ' + media_val + '" value=' + media_val + '></input> <input class="userhandle_list ' + userhandle_val + '" type="text" value=' + userhandle_val + '></input><button class="delete_social ' + media_val + '">Delete</button>';
+        
+        //Get the delete button that is inside the social div
+        const social_delete_button = social_div.querySelector(".delete_social")
+        social_delete_button.addEventListener("click", () => {
+          // Remove the social div from the DOM
+          social_div.remove();
+          
+          //Remove the social entry from the state variable
+          set_social_details((prevSocialDetails) => {
+            const updatedSocialDetails = prevSocialDetails.filter(
+              (social) => social.media !== media_val
+            );
+            return updatedSocialDetails;
+          });
+        });
+
+        //add each entry as a list element
         const social_list = document.getElementById("social_list");
         social_list.appendChild(social_div);
       }
