@@ -1,9 +1,10 @@
 const bcrypt = require('bcryptjs');
 const express = require('express');
-const db = require("./config/db.js");
+require("dotenv").config();
 const multer = require('multer');
 const cors = require('cors');
 const validate = require("./validate.js");
+const mysql = require('mysql2');
 
 const app = express();
 const storage = multer.memoryStorage();
@@ -38,12 +39,35 @@ socketIO.on('connection', (socket) => {
     });
 });*/
 
-
+console.log("env"+process.env.DB_ADMIN_HOST)
 //Database users 
-db_admin = db.db_admin;
-db_client = db.db_client;
-db_freelancer = db.db_freelancer;
-db_user = db.db_user;
+const db_admin = mysql.createConnection({
+    host: 'localhost',
+    user: process.env.DB_ADMIN_USER,
+    password: process.env.DB_ADMIN_PASSWORD,
+    database: process.env.DB_ADMIN_DATABASE
+});
+
+const db_freelancer = mysql.createConnection({
+    host: 'localhost',
+    user: process.env.DB_FREELANCER_USER,
+    password: process.env.DB_FREELANCER_PASSWORD,
+    database: process.env.DB_FREELANCER_DATABASE
+});
+
+const db_client = mysql.createConnection({
+    host: 'localhost',
+    user: process.env.DB_CLIENT_USER,
+    password: process.env.DB_CLIENT_PASSWORD,
+    database: process.env.DB_CLIENT_DATABASE
+});
+
+const db_user = mysql.createConnection({
+    host: 'localhost',
+    user: process.env.DB_USER_USER,
+    password: process.env.DB_USER_PASSWORD,
+    database: process.env.DB_USER_DATABASE
+});
 
 //Connecting to the database
 db_client.connect(function(err) {
