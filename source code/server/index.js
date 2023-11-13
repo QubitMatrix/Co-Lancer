@@ -9,12 +9,12 @@ const mysql = require('mysql2');
 const app = express();
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
-//let final_msg=null
+let final_msg=null
 const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 
-/*var http = require('http').Server(app);
+var http = require('http').Server(app);
 const PORT_CHAT = 4000;
 var socketIO = require('socket.io')(http, {
     cors:{
@@ -32,12 +32,27 @@ socketIO.on('connection', (socket) => {
 
     socket.on('message',(data) => {
         final_msg=data
-        console.log(final_msg);
+        console.log("msg:"+JSON.stringify(final_msg));
+        console.log("name:"+final_msg['name'])
+        q="SELECT freelancer_id FROM freelancer WHERE username='"+final_msg['name']+"';"
+        db_user.query(q,(err,result)=>{
+            if(err) throw err;
+            console.log(result)
+            console.log(result[0])
+            const temp=result[0]
+            const fid=temp.freelancer_id;
+            console.log("ooooo:"+fid)
+            q1="INSERT INTO chat(project_id,freelancer_id,message) VALUES('"+final_msg['project_id']+"','"+fid+"','"+final_msg['text']+"');"
+            db_user.query(q1,(err,result)=>{
+                if(err) throw err;
+            })
+        })
+
     });
     socket.on('disconnect', () => {
       console.log('🔥: A user disconnected');
     });
-});*/
+});
 
 console.log("env"+process.env.DB_ADMIN_HOST)
 //Database users 
@@ -715,32 +730,30 @@ app.post('/give_feedback', (req, res) => {
     })
 })
 
-/*
+//retrieve projects worked on by freelancer
 app.post('/chat',(req,res) => {
     console.log("in chat get:"+req.body.username)
     const username=req.body.username
-    db_freelancer.query("SELECT freelancer_ID,message FROM chat WHERE project_ID='PID5';",(err,result) =>{
+    
+    db_freelancer.query("select distinct(project_id) from chat where freelancer_id=(select freelancer_id from freelancer where username='"+username+"');",(err,result) =>{
         if (err) throw err;
-        console.log('chat'+result);
-        const f_ID = result.map(row => row.freelancer_ID);
-        const chats_list = result.map(row => row.message);
-        q="select distinct(project_id) from chat where freelancer_id=(select freelancer_id from freelancer where username='"+username+"');"
-        console.log(q)
-        db_freelancer.query(q,(err,result) =>
-        {
-            if(err) throw err;
-            const project_id=result.map(row => row.project_id);
-            res.json({"freelancer_id":f_ID, "chats":chats_list, "project_id":project_id});
-        })
-        
+        const project_id=result.map(row => row.project_id);
+        res.json({"pid":project_id});
     })
 });
 
-app.post('/chat',(req,res) => {
-    console.log("final:"+final_msg)
+//retrieve chats of respective project
+app.post('/chat_display',(req,res) => {
+    const pid=req.body.pid
+    q="SELECT username,message FROM chat,freelancer WHERE project_ID='"+pid+"' and chat.freelancer_id=freelancer.freelancer_id;"
+    db_freelancer.query(q,(err,result) =>
+    {
+        const username = result.map(row => row.username);
+        const chats_list = result.map(row => row.message);
+        if(err) throw err;
+        res.json({"username":username, "chats":chats_list});
+    })
 })
-*/
-
 
 //app listening on port 3000
 app.listen(3000,() => {
