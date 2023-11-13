@@ -12,6 +12,7 @@ import ProjectPage from './pages/projects';
 import ProjectDetails from './pages/project_details';
 import PdfDisplay from './pages/file_display';
 import CreateProject from './pages/create_project';
+import ChatPage from './pages/chat_page'
 
 //main function called at runtime
 function App() 
@@ -55,6 +56,7 @@ function App()
           <Route path="/project_details" element={<ProjectDetails></ProjectDetails>}></Route>
           <Route path="/project_pdf" element={<PdfDisplay></PdfDisplay>}></Route>
           <Route path="/create_project" element={<CreateProject></CreateProject>}></Route>
+          <Route path="/chat" element={<ChatPage></ChatPage>}></Route>
         </Routes>
       </Router>
    </div>
