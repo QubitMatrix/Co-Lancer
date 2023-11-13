@@ -35,15 +35,15 @@ socketIO.on('connection', (socket) => {
         console.log("msg:"+JSON.stringify(final_msg));
         console.log("name:"+final_msg['name'])
         q="SELECT freelancer_id FROM freelancer WHERE username='"+final_msg['name']+"';"
-        db_user.query(q,(err,result)=>{
+        db_freelancer.query(q,(err,result)=>{
             if(err) throw err;
             console.log(result)
             console.log(result[0])
             const temp=result[0]
             const fid=temp.freelancer_id;
             console.log("ooooo:"+fid)
-            q1="INSERT INTO chat(project_id,freelancer_id,message) VALUES('"+final_msg['project_id']+"','"+fid+"','"+final_msg['text']+"');"
-            db_user.query(q1,(err,result)=>{
+            q1="INSERT INTO chat VALUES('"+final_msg['project_id']+"','"+fid+"', (SELECT CURRENT_TIMESTAMP()), '"+final_msg['text']+"');"
+            db_freelancer.query(q1,(err,result)=>{
                 if(err) throw err;
             })
         })
@@ -730,12 +730,12 @@ app.post('/give_feedback', (req, res) => {
     })
 })
 
-//retrieve projects worked on by freelancer
+//retrieve incomplete collaboration projects worked on by freelancer
 app.post('/chat',(req,res) => {
     console.log("in chat get:"+req.body.username)
     const username=req.body.username
     
-    db_freelancer.query("select distinct(project_id) from chat where freelancer_id=(select freelancer_id from freelancer where username='"+username+"');",(err,result) =>{
+    db_freelancer.query("select distinct(project_id) from project_freelancers where project_ID IN (SELECT project_ID FROM project where colab='YES' AND status<>'Completed') AND freelancer_id=(select freelancer_id from freelancer where username='"+username+"');",(err,result) =>{
         if (err) throw err;
         const project_id=result.map(row => row.project_id);
         res.json({"pid":project_id});
@@ -745,13 +745,14 @@ app.post('/chat',(req,res) => {
 //retrieve chats of respective project
 app.post('/chat_display',(req,res) => {
     const pid=req.body.pid
-    q="SELECT username,message FROM chat,freelancer WHERE project_ID='"+pid+"' and chat.freelancer_id=freelancer.freelancer_id;"
+    q="SELECT username,message,timestamp FROM chat,freelancer WHERE project_ID='"+pid+"' and chat.freelancer_id=freelancer.freelancer_id;"
     db_freelancer.query(q,(err,result) =>
     {
         const username = result.map(row => row.username);
         const chats_list = result.map(row => row.message);
+        const timestamp = result.map(row => row.timestamp);
         if(err) throw err;
-        res.json({"username":username, "chats":chats_list});
+        res.json({"username":username, "chats":chats_list, "timestamp":timestamp});
     })
 })
 
