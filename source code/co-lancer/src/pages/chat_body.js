@@ -124,14 +124,16 @@ const ChatBody = ({ socket }) => {
         <div className='message__sender'>
           <p>{row}</p>
         </div>
+        <p className="sender__name" >{qres.timestamp[index]}</p>
         </div>
 
       ) : (
         <div className="message__chats">
         <p>{qres.username[index]}</p>
         <div className="message__recipient">
-        <p>{row}</p>
-      </div>
+          <p>{row}</p>
+        </div>
+        <p>{qres.timestamp[index]}</p>
       </div>
       )}
       
