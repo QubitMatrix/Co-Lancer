@@ -460,7 +460,7 @@ app.post("/join_project", (req, res) => {
         } 
         else
         {
-            db_client.query("UPDATE project SET status='In Progress' WHERE project_ID='"+p_id+"';", function(err,result) {
+            db_client.query("UPDATE project SET status='In Progress', start_date=(SELECT CURDATE()) WHERE project_ID='"+p_id+"';", function(err,result) {
                 if(err) throw err;
                 res.json({"Message": "Joined Successfully"});
             });
@@ -676,10 +676,14 @@ app.post('/finalize_project', (req, res) => {
     console.log("project"+project_id);
     
     //Update the status as completed
-    const query = "UPDATE project SET status='Completed' WHERE project_ID='" + project_id + "';";
+    let query = "UPDATE project SET status='Completed' WHERE project_ID='" + project_id + "';";
     db_client.query(query, (err, result) => {
         if(err) throw err;
-        res.send({"Message":"Project Successfully finalized"});
+        query = "DELETE FROM chat WHERE project_ID='" + project_id + "';";
+        db_admin.query(query, (err,result) => {
+            if(err) throw err;
+            res.send({"Message":"Project Successfully finalized"});
+        })
     })
 })
 
