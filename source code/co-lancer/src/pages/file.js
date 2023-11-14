@@ -19,6 +19,17 @@ function FileUpload(props)
         {
             //FormData object to store file details
             const formData = new FormData();
+            console.log("Filesize"+file.type)
+            if(file.size > 3145728)
+            {
+                alert("Max size is 3MB");
+                return;
+            }
+            if(file.type !== "application/pdf")
+            {
+                alert("Only pdf allowed");
+                return;
+            }
             formData.append('pdf', file);
             formData.append('project_title', props.project_title)
 

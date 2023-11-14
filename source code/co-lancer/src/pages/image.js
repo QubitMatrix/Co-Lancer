@@ -20,6 +20,18 @@ const ImageUpload = (props) => {
 
     //FormData object to store picture details
     const formData = new FormData();
+    if(file.size>1048576 )
+    {
+      alert("Max size is 1MB");
+      return;
+    }
+    console.log(file.type)
+    if(file.type !== "image/png" && file.type !== "image/jpg" && file.type !== "image/jpeg")
+    {
+      alert("Only png/jpg/jpeg allowed");
+      return;
+    }
+            
     formData.append('profile_pic', file);
     formData.append('username', props.username);
 
