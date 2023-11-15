@@ -212,9 +212,9 @@ function ClientProfile()
             <div id="details">
               <div id="c_profile">
                 <ImageDisplay imageId={username}/>
-                <h3>Name: {profile?profile.person_name:''}</h3>
-                <h4>Username: {username}</h4>
-                <h4>Organization: {profile?profile.company:''} </h4>
+                <h3><u>Name:</u> {profile?profile.person_name:''}</h3>
+                <h4><u>Username:</u> {username}</h4>
+                <h4><u>Organization:</u> {profile?profile.company:''} </h4>
                 <br/> 
               </div>
               <div id="c_proj">

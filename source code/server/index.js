@@ -481,7 +481,7 @@ app.post("/publish", (req, res) => {
             var project_count = count_p[0];
 
             //insert new project details
-            const query = "INSERT into project VALUE('PID" + project_count + "', '" + title + "', '" + description+ "', " + budget + ", 'Not Assigned', " + timeline + ", '" + username + "', '" + req.body.collab + "', null);";
+            const query = "INSERT into project VALUE('PID" + project_count + "', '" + title + "', '" + description+ "', " + budget + ", 'Not Assigned', " + timeline + ", '" + username + "', '" + req.body.collab + "', null, null);";
             db_client.query(query, function(err, result) {
                 if(err) throw err;
                 console.log(result);
