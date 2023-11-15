@@ -23,7 +23,7 @@ function RegisterClient()
       console.log("Form submitted");
       console.log("inputs"+JSON.stringify(inputs));
 
-      const serverUrl = "http://localhost:3000/register_client";
+      const serverUrl = "https://co-lancer-backend.vercel.app/register_client";
 
       try
       {

@@ -35,7 +35,7 @@ function RegistrationForm()
       inputs["password"] = hashedpassword; 
       console.log("hashed password is "+hashedpassword);
 
-      const serverUrl = "http://localhost:3000/register_user"; //server endpoint to handle form inputs
+      const serverUrl = "https://co-lancer-backend.vercel.app/register_user"; //server endpoint to handle form inputs
 
       try 
       {

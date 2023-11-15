@@ -14,7 +14,7 @@ const PdfDisplay = () => {
     const pdfId = state["title"]; // Change this to the desired PDF ID
 
     //Hit backend to retrieve file data
-    fetch(`http://localhost:3000/display_pdf/${pdfId}`)
+    fetch(`https://co-lancer-backend.vercel.app/display_pdf/${pdfId}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');

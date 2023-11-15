@@ -50,7 +50,7 @@ function RegisterFreelancer()
       inputs["socials"] = JSON.stringify(social_details);
       console.log("inputs" + JSON.stringify(inputs));
       console.log(education_details.length + " " + JSON.stringify(education_details));
-      const serverUrl = "http://localhost:3000/register_freelancer"; //server endpoint to handle form inputs
+      const serverUrl = "https://co-lancer-backend.vercel.app/register_freelancer"; //server endpoint to handle form inputs
 
       try {
         const response = await fetch(serverUrl, {

@@ -34,7 +34,7 @@ function FileUpload(props)
             formData.append('project_title', props.project_title)
 
             //Post the file to backend to save into database
-            fetch('http://localhost:3000/upload_pdf', {
+            fetch('https://co-lancer-backend.vercel.app/upload_pdf', {
             method: 'POST',
             body: formData,
             })

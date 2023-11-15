@@ -36,7 +36,7 @@ const ImageUpload = (props) => {
     formData.append('username', props.username);
 
     //Connect to backend to store file in database
-    fetch('http://localhost:3000/upload_profile', {
+    fetch('https://co-lancer-backend.vercel.app/upload_profile', {
       method: 'POST',
       body: formData,
     })

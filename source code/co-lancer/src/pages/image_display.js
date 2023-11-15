@@ -7,7 +7,7 @@ function ImageDisplay (props)
   //Executed when the page is rendered
   useEffect(() => {
     //Connect to backend to retrieve the profile picture
-    fetch(`http://localhost:3000/display_image/${props.imageId}`)
+    fetch(`https://co-lancer-backend.vercel.app/display_image/${props.imageId}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');

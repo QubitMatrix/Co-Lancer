@@ -23,7 +23,7 @@ function Login()
       console.log("Form submitted");
       console.log("inputs"+JSON.stringify(inputs));
 
-      const serverUrl = "http://localhost:3000/authenticate"; //url to hit backend and get a response
+      const serverUrl = "https://co-lancer-backend.vercel.app/authenticate"; //url to hit backend and get a response
 
       try
       {

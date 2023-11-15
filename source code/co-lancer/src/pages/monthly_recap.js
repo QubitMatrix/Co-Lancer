@@ -30,7 +30,7 @@ const MonthlyRecap = () =>{
     useEffect(() => {
         const getRecords = async () => {
           try {
-            const response = await fetch("http://localhost:3000/monthly_recap", {
+            const response = await fetch("https://co-lancer-backend.vercel.app/monthly_recap", {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

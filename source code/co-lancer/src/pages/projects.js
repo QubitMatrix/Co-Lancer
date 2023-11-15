@@ -36,7 +36,7 @@ function ProjectPage()
     finally 
     {
         //backend endpoint
-        const serverUrl = "http://localhost:3000/projects";
+        const serverUrl = "https://co-lancer-backend.vercel.app/projects";
 
         try 
         {
@@ -77,7 +77,7 @@ function ProjectPage()
     console.log("Joining"+f_id+"-"+p_id);
 
     //backend endpoint
-    const serverUrl = "http://localhost:3000/join_project";
+    const serverUrl = "https://co-lancer-backend.vercel.app/join_project";
 
     try 
     {

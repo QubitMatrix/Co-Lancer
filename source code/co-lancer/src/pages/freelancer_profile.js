@@ -38,7 +38,7 @@ function FreelancerProfile()
       e.preventDefault();
       console.log("count_submit"+count);
 
-      const serverUrl = "http://localhost:3000/submit_project";
+      const serverUrl = "https://co-lancer-backend.vercel.app/submit_project";
       try 
       {
         const response = await fetch(serverUrl, {
@@ -79,7 +79,7 @@ function FreelancerProfile()
       {
         try 
         {
-          const response = await fetch("http://localhost:3000/freelancer_profile", {
+          const response = await fetch("https://co-lancer-backend.vercel.app/freelancer_profile", {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

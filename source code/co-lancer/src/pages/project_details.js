@@ -12,8 +12,6 @@ function ProjectDetails()
     const {state} = useLocation();
 
     const project_state = state["project"];
-    const f_id = state["f_id"];
-    const p_id = project_state[0]
 
     var domains_arr = [];
     var skills_arr = [];

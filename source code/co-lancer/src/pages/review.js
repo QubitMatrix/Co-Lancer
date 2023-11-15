@@ -16,7 +16,7 @@ function Review()
         {
             try
             {
-                const serverUrl = "http://localhost:3000/get_reviews";
+                const serverUrl = "https://co-lancer-backend.vercel.app/get_reviews";
 
                 //send a request to backend and wait for a response before proceeding
                 const response = await fetch(serverUrl, {
