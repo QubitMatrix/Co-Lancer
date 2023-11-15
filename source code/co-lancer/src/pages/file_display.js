@@ -39,7 +39,7 @@ const PdfDisplay = () => {
           src={pdfData}
           title="Uploaded PDF"
           width="100%"
-          height="500px"
+          height="700px"
         />
       )}
     </div>

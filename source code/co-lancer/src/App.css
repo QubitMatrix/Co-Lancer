@@ -284,3 +284,48 @@ li
   padding-left: 50px;
   background-image: linear-gradient(to bottom right,#f5883e,#FA924C);
 }
+
+.recap-div
+{
+  padding-left: 70px;
+  padding-top: 30px;
+
+}
+
+
+.pie-div
+{
+  height: 550px;
+  width: 700px;
+  border-radius: 23px;
+  background-color: whitesmoke;
+  margin-right: 100px;
+  
+}
+
+.recap-details
+{
+  display: flex;
+}
+
+.project-dets
+{
+  width: 600px;
+  border-radius: 22px;
+  margin-top: 10%;
+  margin-bottom: 10%;
+  margin-left: 30%;
+  padding-left: 60px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  background-image: linear-gradient(to bottom right,#f5883e,#FA924C);
+}
+
+#view_pdf
+{
+  color:aliceblue;
+  padding: 10px;
+  margin-right: 10px;
+  background-color:dimgrey;
+  border-radius: 20px;
+}

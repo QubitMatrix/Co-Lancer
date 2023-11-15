@@ -34,7 +34,7 @@ function ProjectDetails()
     aggregate(project_state[8]? project_state[8].split(",") : [],freelancers_arr);
     
     //Page rendered for project_details
-    return(<div>
+    return(<div className='project-dets'>
         <h2>{project_state[1]}</h2>
         <button id="view_pdf" onClick={()=>{navigate("/project_pdf", {state:{title:project_state[1]}})}}>View PDF</button><br/>
         <h3>Description</h3>
