@@ -57,31 +57,31 @@ socketIO.on('connection', (socket) => {
 console.log("env"+process.env.DB_ADMIN_HOST)
 //Database users 
 const db_admin = mysql.createConnection({
-    host: 'localhost',
+    host: process.env.DB_HOST,
     user: process.env.DB_ADMIN_USER,
     password: process.env.DB_ADMIN_PASSWORD,
-    database: process.env.DB_ADMIN_DATABASE
+    database: process.env.DB_DATABASE
 });
 
 const db_freelancer = mysql.createConnection({
-    host: 'localhost',
+    host: process.env.DB_HOST,
     user: process.env.DB_FREELANCER_USER,
     password: process.env.DB_FREELANCER_PASSWORD,
-    database: process.env.DB_FREELANCER_DATABASE
+    database: process.env.DB_DATABASE
 });
 
 const db_client = mysql.createConnection({
-    host: 'localhost',
+    host: process.env.DB_HOST,
     user: process.env.DB_CLIENT_USER,
     password: process.env.DB_CLIENT_PASSWORD,
-    database: process.env.DB_CLIENT_DATABASE
+    database: process.env.DB_DATABASE
 });
 
 const db_user = mysql.createConnection({
-    host: 'localhost',
+    host: process.env.DB_HOST,
     user: process.env.DB_USER_USER,
     password: process.env.DB_USER_PASSWORD,
-    database: process.env.DB_USER_DATABASE
+    database: process.env.DB_DATABASE
 });
 
 //Connecting to the database
@@ -757,6 +757,50 @@ app.post('/chat_display',(req,res) => {
         const timestamp = result.map(row => row.timestamp);
         if(err) throw err;
         res.json({"username":username, "chats":chats_list, "timestamp":timestamp});
+    })
+})
+
+app.post('/monthly_recap',(req,res)=>{
+    const fid=req.body.fid;
+    const currentDate = new Date();
+
+    const month = currentDate.getMonth()+1;
+    console.log(fid+month)
+    q1="SELECT COUNT(*) AS monthly_proj FROM project JOIN project_freelancers ON project.project_id = project_freelancers.project_id WHERE MONTH(project.start_date) =" +month+" and project_freelancers.freelancer_id='"+fid+"';"
+    console.log(q1)
+    db_user.query(q1,(err,result) => {
+        if (err) throw err;
+        const month_proj=result.map(row=>row.monthly_proj);
+        console.log(month_proj)
+        q2="SELECT COUNT(*) as total FROM project JOIN project_freelancers ON project.project_id=project_freelancers.project_id WHERE project_freelancers.freelancer_id='"+fid+"';"
+        db_user.query(q2,(err,result) => {
+            if(err) throw err;
+            const total_proj=result.map(row=>row.total);
+            console.log(total_proj)
+            q3="SELECT COUNT(*) AS in_prog FROM project JOIN project_freelancers ON project.project_id=project_freelancers.project_id WHERE project_freelancers.freelancer_id='"+fid+"' and status='In Progress';"
+            db_user.query(q3,(err,result) =>{
+                if(err) throw err;
+                const in_progress=result.map(row=>row.in_prog);
+                console.log(in_progress)
+                q4="SELECT COUNT(*) AS completed FROM project JOIN project_freelancers ON project.project_id=project_freelancers.project_id WHERE project_freelancers.freelancer_id='"+fid+"' and status='Completed';"
+                db_user.query(q4,(err,result) => {
+                    if(err) throw err;
+                    const comp=result.map(row=>row.completed);
+                    console.log(comp)
+                    q5="SELECT monthly_amount('"+fid+"',"+month+") AS total_earned;"
+                    db_user.query(q5,(err,result)=>{
+                        if(err) throw err;
+                        var a=result[0]
+                        const amount=a.total_earned;
+                        console.log(amount)
+                        res.json({"month_proj":month_proj[0],"total":total_proj[0],"in_progress":in_progress[0],"completed":comp[0],"amount":amount});
+                    })
+                
+                   
+                })
+
+            })
+        })
     })
 })
 

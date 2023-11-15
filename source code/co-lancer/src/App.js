@@ -13,6 +13,7 @@ import ProjectDetails from './pages/project_details';
 import PdfDisplay from './pages/file_display';
 import CreateProject from './pages/create_project';
 import ChatPage from './pages/chat_page'
+import MonthlyRecap from './pages/monthly_recap'
 
 //main function called at runtime
 function App() 
@@ -50,13 +51,13 @@ function App()
           <Route path="/login" element={<Login></Login>}></Route>
           <Route path="/freelancer_profile" element={<FreelancerProfile></FreelancerProfile>}></Route>
           <Route path="/client_profile" element={<ClientProfile></ClientProfile>}></Route>
-          <Route path="/monthly_recap" element={<FreelancerProfile></FreelancerProfile>}></Route>
           <Route path="/reviews" element={<Review></Review>}></Route>
           <Route path="/projects" element={<ProjectPage></ProjectPage>}></Route>
           <Route path="/project_details" element={<ProjectDetails></ProjectDetails>}></Route>
           <Route path="/project_pdf" element={<PdfDisplay></PdfDisplay>}></Route>
           <Route path="/create_project" element={<CreateProject></CreateProject>}></Route>
           <Route path="/chat" element={<ChatPage></ChatPage>}></Route>
+          <Route path="/monthly_recap" element={<MonthlyRecap></MonthlyRecap>}></Route>
         </Routes>
       </Router>
    </div>
