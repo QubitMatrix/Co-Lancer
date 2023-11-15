@@ -149,6 +149,12 @@ app.post("/register_freelancer", (req, res) => {
             db_freelancer.query(insert_query, function(err, result) {
                 if(err) throw err;
                 console.log(result);
+
+                //Update the freelancer_count if successfully inserted
+                db_freelancer.query("UPDATE counter SET freelancer_count = freelancer_count+1", function(err,result) {
+                    if(err) throw err;
+                    console.log(result);
+                });
             });
 
             //Group all the education details and form a query
@@ -246,7 +252,12 @@ app.post("/register_client", (req, res) => {
             db_client.query(insert_query, function(err, result) {
                 if(err) throw err;
                 console.log(result);
-                res.send({"Message":"Registration successful,you will now be required to select a profile picture."});
+                //Update the client_count if successfully inserted
+                db_client.query("UPDATE counter SET client_count=client_count+1", function(err,result) {
+                    if(err) throw err;
+                    console.log(result);
+                    res.send({"Message":"Registration successful,you will now be required to select a profile picture."});
+                });
             });
         });
     }
@@ -474,6 +485,12 @@ app.post("/publish", (req, res) => {
             db_client.query(query, function(err, result) {
                 if(err) throw err;
                 console.log(result);
+
+                //Update the project_count if successfully inserted
+                db_client.query("UPDATE counter SET project_count=project_count+1", function(err,result) {
+                    if(err) throw err;
+                    console.log(result);
+                });
 
                 //Convert domains string to a query for insertion
                 let list1 = "";
@@ -786,7 +803,8 @@ app.post('/monthly_recap',(req,res)=>{
                     if(err) throw err;
                     const comp=result.map(row=>row.completed);
                     console.log(comp)
-                    q5="SELECT monthly_amount('"+fid+"',"+month+") AS total_earned;"
+                    //q5="SELECT monthly_amount('"+fid+"',"+month+") AS total_earned;"
+                    q5="SELECT SUM(amount) AS total_earned FROM payment WHERE payment.project_id IN (SELECT project_id FROM project_freelancers WHERE freelancer_id ='"+ fid+"') AND MONTH(payment.date)="+month+";"
                     db_user.query(q5,(err,result)=>{
                         if(err) throw err;
                         var a=result[0]
