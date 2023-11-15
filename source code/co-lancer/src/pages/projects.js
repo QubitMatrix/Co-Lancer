@@ -137,7 +137,7 @@ function ProjectPage()
                     <p>{pro[i][2]}</p>
                     <div>{domain_tags}</div>
                 </li>
-                <button value={pro[i][0]} id="join" onClick={handleClick}>Join Now</button>
+                <button className="button" value={pro[i][0]} id="join" onClick={handleClick}>Join Now</button>
             </div>);
         }
 

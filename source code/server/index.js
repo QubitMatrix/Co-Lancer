@@ -22,39 +22,7 @@ var socketIO = require('socket.io')(http, {
     }
 });
 
-
-http.listen(PORT_CHAT, () => {
-    console.log(`listening on *:${PORT_CHAT}`);
-});
-
-socketIO.on('connection', (socket) => {
-    console.log(`⚡: ${socket.id} user just connected!`);
-
-    socket.on('message',(data) => {
-        final_msg=data
-        console.log("msg:"+JSON.stringify(final_msg));
-        console.log("name:"+final_msg['name'])
-        q="SELECT freelancer_id FROM freelancer WHERE username='"+final_msg['name']+"';"
-        db_freelancer.query(q,(err,result)=>{
-            if(err) throw err;
-            console.log(result)
-            console.log(result[0])
-            const temp=result[0]
-            const fid=temp.freelancer_id;
-            console.log("ooooo:"+fid)
-            q1="INSERT INTO chat VALUES('"+final_msg['project_id']+"','"+fid+"', (SELECT CURRENT_TIMESTAMP()), '"+final_msg['text']+"');"
-            db_freelancer.query(q1,(err,result)=>{
-                if(err) throw err;
-            })
-        })
-
-    });
-    socket.on('disconnect', () => {
-      console.log('🔥: A user disconnected');
-    });
-});
-
-console.log("env"+process.env.DB_ADMIN_HOST)
+console.log("env"+process.env.DB_HOST)
 //Database users 
 const db_admin = mysql.createConnection({
     host: process.env.DB_HOST,
@@ -759,6 +727,37 @@ app.post('/chat_display',(req,res) => {
         res.json({"username":username, "chats":chats_list, "timestamp":timestamp});
     })
 })
+
+http.listen(PORT_CHAT, () => {
+    console.log(`listening on *:${PORT_CHAT}`);
+});
+
+socketIO.on('connection', (socket) => {
+    console.log(`⚡: ${socket.id} user just connected!`);
+
+    socket.on('message',(data) => {
+        final_msg=data
+        console.log("msg:"+JSON.stringify(final_msg));
+        console.log("name:"+final_msg['name'])
+        q="SELECT freelancer_id FROM freelancer WHERE username='"+final_msg['name']+"';"
+        db_freelancer.query(q,(err,result)=>{
+            if(err) throw err;
+            console.log(result)
+            console.log(result[0])
+            const temp=result[0]
+            const fid=temp.freelancer_id;
+            console.log("ooooo:"+fid)
+            q1="INSERT INTO chat VALUES('"+final_msg['project_id']+"','"+fid+"', (SELECT CURRENT_TIMESTAMP()), '"+final_msg['text']+"');"
+            db_freelancer.query(q1,(err,result)=>{
+                if(err) throw err;
+            })
+        })
+
+    });
+    socket.on('disconnect', () => {
+      console.log('🔥: A user disconnected');
+    });
+});
 
 app.post('/monthly_recap',(req,res)=>{
     const fid=req.body.fid;
