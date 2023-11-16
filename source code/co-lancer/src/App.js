@@ -14,6 +14,7 @@ import PdfDisplay from './pages/file_display';
 import CreateProject from './pages/create_project';
 import ChatPage from './pages/chat_page'
 import MonthlyRecap from './pages/monthly_recap'
+import Payment from './pages/payment'
 
 //main function called at runtime
 function App() 
@@ -58,6 +59,7 @@ function App()
           <Route path="/create_project" element={<CreateProject></CreateProject>}></Route>
           <Route path="/chat" element={<ChatPage></ChatPage>}></Route>
           <Route path="/monthly_recap" element={<MonthlyRecap></MonthlyRecap>}></Route>
+          <Route path="/payment" element={<Payment></Payment>}></Route>
         </Routes>
       </Router>
    </div>

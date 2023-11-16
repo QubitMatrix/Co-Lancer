@@ -821,6 +821,41 @@ app.post('/monthly_recap',(req,res)=>{
     })
 })
 
+app.post('/payment',(req,res)=>{
+    const username=req.body.username;
+    const pid=req.body.pid;
+    const mode=req.body.mode;
+    const amount=req.body.amount;
+    const date = new Date();
+
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+    let currentDate = `${year}-${month}-${day}`;
+    var time = ((date.getHours() < 10)?"0":"") + date.getHours() +":"+ ((date.getMinutes() < 10)?"0":"") + date.getMinutes() +":"+ ((date.getSeconds() < 10)?"0":"") + date.getSeconds()
+    console.log(currentDate);
+    console.log(time)
+    console.log("in index:"+username+" "+pid+" "+mode+" "+amount)
+    q1="SELECT payment_count FROM counter;"
+    db_client.query(q1,(err,res)=>{
+        if (err) throw err;
+        const val=res.map(row=>row.payment_count)
+        const payid="PAY"+val
+        console.log(payid)
+        q2="INSERT INTO payment VALUES('"+payid+"','"+pid+"','"+currentDate+"','"+currentDate+" "+time+"','Successful',"+amount+",'"+mode+"');"
+        console.log(q2)
+        db_client.query(q2,(err,res)=>{
+            if(err) throw err;
+            console.log("yay")
+            q3="UPDATE counter SET payment_count=payment_count+1;"
+            db_client.query(q3,(err,res)=>{
+                if(err) throw err;
+                console.log("updated counter")
+            })
+        })
+    })
+})
+
 //app listening on port 3000
 app.listen(3000,() => {
     console.log(`Server is running on ${PORT}`);

@@ -321,11 +321,29 @@ li
   background-image: linear-gradient(to bottom right,#f5883e,#FA924C);
 }
 
-#view_pdf
+#view_pdf,.pay-submit
 {
   color:aliceblue;
   padding: 10px;
   margin-right: 10px;
   background-color:dimgrey;
   border-radius: 20px;
+}
+
+.payment-div
+{
+  width: 400px;
+  border-radius: 22px;
+  margin-top: 10%;
+  margin-bottom: 10%;
+  margin-left: 35%;
+  padding-left: 20px;
+  padding-top: 20px;
+  background-image: linear-gradient(to bottom right,#f5883e,#FA924C);
+}
+
+#Dropdown,.amount
+{
+  border-radius: 18px;
+  height: 40px;
 }

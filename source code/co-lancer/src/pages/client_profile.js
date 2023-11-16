@@ -37,6 +37,7 @@ function ClientProfile()
         {
           const data = await response.json();
           alert(data.Message);
+          navigate("/payment",{state:{username:username,pid:project_id}})
         }
         else
         {
@@ -47,6 +48,7 @@ function ClientProfile()
       { 
         alert("Server unreachable, try again later."+err)
       }
+      
     }
 
     //Handle return of project ffrom client
