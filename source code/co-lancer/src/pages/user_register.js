@@ -2,6 +2,7 @@ import '../App.css';
 import React, {useState} from 'react'
 import bcrypt from 'bcryptjs'
 import { useNavigate } from 'react-router-dom';
+import server_url from './endpoint'
 
 //User registration page
 function RegistrationForm()
@@ -35,7 +36,7 @@ function RegistrationForm()
       inputs["password"] = hashedpassword; 
       console.log("hashed password is "+hashedpassword);
 
-      const serverUrl = "https://co-lancer-backend.vercel.app/register_user"; //server endpoint to handle form inputs
+      const serverUrl = server_url+"/register_user"; //server endpoint to handle form inputs
 
       try 
       {

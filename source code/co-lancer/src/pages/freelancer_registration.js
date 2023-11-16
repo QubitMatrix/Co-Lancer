@@ -2,6 +2,7 @@ import '../App.css';
 import React, {useState, useEffect} from 'react'
 import ImageUpload from './image';
 import { useLocation } from 'react-router-dom';
+import server_url from './endpoint'
 
 //Registration page extension, for freelancer
 function RegisterFreelancer()
@@ -50,7 +51,7 @@ function RegisterFreelancer()
       inputs["socials"] = JSON.stringify(social_details);
       console.log("inputs" + JSON.stringify(inputs));
       console.log(education_details.length + " " + JSON.stringify(education_details));
-      const serverUrl = "https://co-lancer-backend.vercel.app/register_freelancer"; //server endpoint to handle form inputs
+      const serverUrl = server_url+"/register_freelancer"; //server endpoint to handle form inputs
 
       try {
         const response = await fetch(serverUrl, {

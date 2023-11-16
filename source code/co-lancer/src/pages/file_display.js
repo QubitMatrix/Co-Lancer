@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import server_url from './endpoint'
 
 const PdfDisplay = () => {
   //State variable for pdf data
@@ -14,7 +15,7 @@ const PdfDisplay = () => {
     const pdfId = state["title"]; // Change this to the desired PDF ID
 
     //Hit backend to retrieve file data
-    fetch(`https://co-lancer-backend.vercel.app/display_pdf/${pdfId}`)
+    fetch(`${server_url}/display_pdf/${pdfId}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');

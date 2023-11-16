@@ -1,6 +1,7 @@
 import '../App.css';
 import React, {useState} from 'react'
 import { useNavigate } from 'react-router-dom';
+import server_url from './endpoint'
 
 //Login page for users and authentication
 function Login()
@@ -23,8 +24,9 @@ function Login()
       console.log("Form submitted");
       console.log("inputs"+JSON.stringify(inputs));
 
-      const serverUrl = "https://co-lancer-backend.vercel.app/authenticate"; //url to hit backend and get a response
+      const serverUrl = server_url+"/authenticate"; //url to hit backend and get a response
 
+      console.log(serverUrl);
       try
       {
         fetch(serverUrl, {

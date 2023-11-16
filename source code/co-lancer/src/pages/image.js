@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import server_url from './endpoint'
 
 
 const ImageUpload = (props) => {
@@ -36,7 +37,7 @@ const ImageUpload = (props) => {
     formData.append('username', props.username);
 
     //Connect to backend to store file in database
-    fetch('https://co-lancer-backend.vercel.app/upload_profile', {
+    fetch(server_url+'/upload_profile', {
       method: 'POST',
       body: formData,
     })

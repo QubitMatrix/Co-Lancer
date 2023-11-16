@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
+import server_url from './endpoint'
 
 const MonthlyRecap = () =>{
     const {state} = useLocation();
@@ -30,7 +31,7 @@ const MonthlyRecap = () =>{
     useEffect(() => {
         const getRecords = async () => {
           try {
-            const response = await fetch("https://co-lancer-backend.vercel.app/monthly_recap", {
+            const response = await fetch(server_url+"/monthly_recap", {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

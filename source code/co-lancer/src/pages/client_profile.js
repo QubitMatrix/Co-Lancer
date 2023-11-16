@@ -2,6 +2,7 @@ import '../App.css';
 import React, {useState, useEffect} from 'react'
 import { useNavigate, useLocation } from 'react-router-dom';
 import ImageDisplay from './image_display';
+import server_url from './endpoint'
 
 //Profile page view of client
 function ClientProfile()
@@ -22,7 +23,7 @@ function ClientProfile()
     const handleFinalizeClick = async (project_id) => {
       console.log("Project ID: "+project_id);
 
-      const serverUrl = "https://co-lancer-backend.vercel.app/finalize_project";
+      const serverUrl = server_url+"/finalize_project";
       try 
       {
         const response = await fetch(serverUrl, {
@@ -55,7 +56,7 @@ function ClientProfile()
     const handleReturnClick = async (project_id) => {
       console.log("Project_id"+project_id);
 
-      const serverUrl = "https://co-lancer-backend.vercel.app/return_project";
+      const serverUrl = server_url+"/return_project";
       try 
       {
         const response = await fetch(serverUrl, {
@@ -88,7 +89,7 @@ function ClientProfile()
       {
         try 
         {
-          const response = await fetch("https://co-lancer-backend.vercel.app/client_profile", {
+          const response = await fetch(server_url+"/client_profile", {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -122,7 +123,7 @@ function ClientProfile()
       e.preventDefault();
       console.log("Index"+index);
       console.log("Feedback"+project_id+inputs.review+inputs.rating+username);
-      const serverUrl = "https://co-lancer-backend.vercel.app/give_feedback";
+      const serverUrl = server_url+"/give_feedback";
 
       try
       {

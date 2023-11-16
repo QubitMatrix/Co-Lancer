@@ -3,6 +3,7 @@ import '../App.css';
 import React, {useState, useEffect} from 'react'
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+import server_url from './endpoint'
 
 const Payment=()=>{
     const {state} = useLocation();
@@ -19,7 +20,7 @@ const Payment=()=>{
         console.log("mode:"+mode)
         console.log("amount:"+amount)
         try {
-            const response = await fetch('https://co-lancer-backend.vercel.app/payment', {
+            const response = await fetch(server_url+'/payment', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -27,13 +28,18 @@ const Payment=()=>{
               body: JSON.stringify({'username':username,'pid':pid,'mode':mode,'amount':amount}), 
             });
       
-            if (!response.ok) {
-              throw new Error('nope not working'); 
+            if (!response.ok) 
+            {
+              alert('Server Error'); 
             }
-            
+            else
+            {
+              alert("Payment Successful");
+            }
             // Handle success, if needed
-          } catch (error) {
-            console.error('Error sending data to server:', error);
+          } catch (error) 
+          {
+            alert('Server unreachable, try again later.'+error);
           }
 
     }

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import ImageDisplay from './image_display';
 import { useNavigate } from 'react-router-dom';
+import server_url from './endpoint'
 
 //Freelancer profile page
 function FreelancerProfile()
@@ -38,7 +39,7 @@ function FreelancerProfile()
       e.preventDefault();
       console.log("count_submit"+count);
 
-      const serverUrl = "https://co-lancer-backend.vercel.app/submit_project";
+      const serverUrl = server_url+"/submit_project";
       try 
       {
         const response = await fetch(serverUrl, {
@@ -79,7 +80,7 @@ function FreelancerProfile()
       {
         try 
         {
-          const response = await fetch("https://co-lancer-backend.vercel.app/freelancer_profile", {
+          const response = await fetch(server_url+"/freelancer_profile", {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

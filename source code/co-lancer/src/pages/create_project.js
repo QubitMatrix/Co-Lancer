@@ -2,6 +2,7 @@ import '../App.css';
 import React, {useState, useEffect} from 'react'
 import FileUpload from './file';
 import { useLocation } from 'react-router-dom';
+import server_url from './endpoint'
 
 function CreateProject()
 {
@@ -28,7 +29,7 @@ function CreateProject()
       console.log("Form submitted");
       console.log("inputs"+JSON.stringify(inputs));
 
-      const serverUrl = "https://co-lancer-backend.vercel.app/publish"; //url to hit backend and get a response
+      const serverUrl = server_url+"/publish"; //url to hit backend and get a response
       try
       {
         const response = await fetch(serverUrl, {

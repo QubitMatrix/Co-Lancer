@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import server_url from './endpoint'
 
 function FileUpload(props) 
 { 
@@ -34,7 +35,7 @@ function FileUpload(props)
             formData.append('project_title', props.project_title)
 
             //Post the file to backend to save into database
-            fetch('https://co-lancer-backend.vercel.app/upload_pdf', {
+            fetch(server_url+'/upload_pdf', {
             method: 'POST',
             body: formData,
             })

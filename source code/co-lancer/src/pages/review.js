@@ -1,6 +1,7 @@
 import '../App.css';
 import React, {useState, useEffect} from 'react'
 import { useLocation } from 'react-router-dom';
+import server_url from './endpoint'
 
 //Review page for individual freelancer
 function Review()
@@ -16,7 +17,7 @@ function Review()
         {
             try
             {
-                const serverUrl = "https://co-lancer-backend.vercel.app/get_reviews";
+                const serverUrl = server_url+"/get_reviews";
 
                 //send a request to backend and wait for a response before proceeding
                 const response = await fetch(serverUrl, {

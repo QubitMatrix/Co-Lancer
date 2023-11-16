@@ -1,6 +1,7 @@
 import '../App.css';
 import React, {useState, useEffect} from 'react'
 import { Link, useLocation } from 'react-router-dom';
+import server_url from './endpoint'
 
 //View projects page 
 function ProjectPage() 
@@ -36,7 +37,7 @@ function ProjectPage()
     finally 
     {
         //backend endpoint
-        const serverUrl = "https://co-lancer-backend.vercel.app/projects";
+        const serverUrl = server_url+"/projects";
 
         try 
         {
@@ -77,7 +78,7 @@ function ProjectPage()
     console.log("Joining"+f_id+"-"+p_id);
 
     //backend endpoint
-    const serverUrl = "https://co-lancer-backend.vercel.app/join_project";
+    const serverUrl = server_url+"/join_project";
 
     try 
     {

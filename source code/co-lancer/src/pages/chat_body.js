@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import server_url from './endpoint'
 
 const ChatBody = ({ socket }) => {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ const ChatBody = ({ socket }) => {
   useEffect(() => {
     const getRecords = async () => {
       try {
-        const response = await fetch("https://co-lancer-backend.vercel.app/chat", {
+        const response = await fetch(server_url+"/chat", {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -67,7 +68,7 @@ const ChatBody = ({ socket }) => {
   const handleClick=async (val)=>{
     console.log("pid:"+val)
     try {
-      const response = await fetch('https://co-lancer-backend.vercel.app/chat_display', {
+      const response = await fetch(server_url+'/chat_display', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

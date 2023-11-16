@@ -2,6 +2,7 @@ import '../App.css';
 import React, {useState} from 'react'
 import ImageUpload from './image';
 import { useLocation } from 'react-router-dom';
+import server_url from './endpoint'
 
 //Registration page extension, for client
 function RegisterClient()
@@ -23,7 +24,7 @@ function RegisterClient()
       console.log("Form submitted");
       console.log("inputs"+JSON.stringify(inputs));
 
-      const serverUrl = "https://co-lancer-backend.vercel.app/register_client";
+      const serverUrl = server_url+"/register_client";
 
       try
       {
