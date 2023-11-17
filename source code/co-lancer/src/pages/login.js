@@ -64,7 +64,14 @@ function Login()
 
     //Page rendered at login
     return(
+      <div>
+        <div className='header'>
+          <button className='nav' onClick={()=>navigate('/')}>Home</button>
+          <button className='nav' onClick={()=>{navigate('/register')}}>Register</button>
+        </div>
+    
       <div id="login">
+        
         <h3 className='text-4xl pt-9 font-bold place-self-center text-center'>Log In</h3>
         <div className='form_div'>
           <form id="login_form" onSubmit={handleSubmit}>
@@ -76,6 +83,7 @@ function Login()
             <button className="button" id ="b_login" type="submit">Log In</button>
           </form>
         </div>
+      </div>
       </div>
     )
 }

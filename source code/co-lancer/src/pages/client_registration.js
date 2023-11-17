@@ -1,7 +1,7 @@
 import '../App.css';
 import React, {useState} from 'react'
 import ImageUpload from './image';
-import { useLocation } from 'react-router-dom';
+import { useLocation,useNavigate } from 'react-router-dom';
 import server_url from './endpoint'
 
 //Registration page extension, for client
@@ -11,6 +11,7 @@ function RegisterClient()
     const [inputs, setInputs] = useState({});
 
     const {state} = useLocation();
+    const navigate=useNavigate()
     inputs['username'] = state.username;
 
     const handleChange = (e) => {
@@ -57,6 +58,11 @@ function RegisterClient()
     }
 
     return (
+      <div>
+       <div className='header'>
+          <button className='nav' onClick={()=>navigate('/')}>Home</button>
+          <button className='nav' onClick={()=>{navigate('/login')}}>Log In</button>
+        </div>
       <div className='reg_c_div'>
         <h1 className='text-4xl text-center pt-4'>Client</h1>
         <br/>
@@ -74,6 +80,7 @@ function RegisterClient()
             <br/><br/>
           </div>
         </form>
+      </div>
       </div>
     );
 }

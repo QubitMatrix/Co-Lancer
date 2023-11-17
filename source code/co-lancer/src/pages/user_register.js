@@ -67,6 +67,13 @@ function RegistrationForm()
     }
   
     return (
+      <div>
+        <div className='header'>
+            <button className='nav' onClick={()=>{navigate('/')}}>Home</button>
+            <button className='nav' onClick={()=>{navigate('/login')}}>Log In</button>
+        
+        </div>
+      
       <div className='reg-page'>
         <h1 className='text-4xl text-center pt-9'>Register</h1>
         <br/>
@@ -97,6 +104,7 @@ function RegistrationForm()
           <br/>
         </form>
         </div>
+      </div>
       </div>
     );
 }

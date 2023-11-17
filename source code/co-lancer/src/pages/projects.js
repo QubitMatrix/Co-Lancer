@@ -2,10 +2,13 @@ import '../App.css';
 import React, {useState, useEffect} from 'react'
 import { Link, useLocation } from 'react-router-dom';
 import server_url from './endpoint'
+import { useNavigate } from 'react-router-dom';
 
 //View projects page 
 function ProjectPage() 
 {
+  const navigate=useNavigate()
+  
   const [domain, setDomain] = useState({domain_name:"all"}); //handle change of domain (for search bar)
   const [projects_arr, setProject_arr] = useState({ available_projects: [], completed_projects: []}); //handle project data recieved from backend
 
@@ -17,7 +20,7 @@ function ProjectPage()
   //Access the states from previous location (in this case freelancer_id from profile page)
   const {state}= useLocation();
   const f_id = state["f_id"];
-
+  const username=state["username"]
   //Handle change in searchbar
   const handleChange = (e) => {
     e.preventDefault();
@@ -160,6 +163,16 @@ function ProjectPage()
 
   //Page to be rendered for projects 
   return (
+    <div>
+      <div className='header'>
+            <button className='nav' onClick={()=>{navigate('/freelancer_profile',{state:{username:username,f_id:f_id}})}}>Profile</button>
+            <button className='nav' onClick={()=>{navigate('/projects',{state:{username:username,f_id:f_id}})}}>Explore</button>
+        
+        <div>
+            <button className='logout' onClick={()=>{navigate('/')}}>Log Out</button>
+        </div>
+        </div>
+   
     <div id="project_page">
       <input type="text" name="domain_name" value={domain.domain_name} onChange={handleChange} required />
       <button id="searchbar" onClick={handleSearch}>Search</button>
@@ -172,6 +185,7 @@ function ProjectPage()
       <ul>
         {projects_arr.completed_projects}
       </ul>
+    </div>
     </div>
   )
 }

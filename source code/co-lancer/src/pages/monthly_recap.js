@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 import server_url from './endpoint'
 
 const MonthlyRecap = () =>{
     const {state} = useLocation();
+    const navigate=useNavigate()
     const [result, setResult] = useState([]);
     const f_id=state["f_id"];
+    const username=state["username"]
     const COLORS = ["#8884d8", "#82ca9d", "#FFBB28", "#FF8042", "#AF19FF"];
     const monthNames=['January','February','March','April','May','June','July','August','September','October','November','December']
     let monthIndex=(new Date().getMonth())
@@ -57,6 +59,16 @@ const MonthlyRecap = () =>{
     {name:"in-progress",value:result.in_progress}]
 
     return(
+      <div>
+        <div className='header'>
+            <button className='nav' onClick={()=>{navigate('/freelancer_profile',{state:{username:username,f_id:f_id}})}}>Profile</button>
+            <button className='nav' onClick={()=>{navigate('/projects',{state:{username:username,f_id:f_id}})}}>Explore</button>
+        
+        <div>
+            <button className='logout' onClick={()=>{navigate('/')}}>Log Out</button>
+        </div>
+        </div>
+      
     <div className='recap-div'>
             <h2>Monthly Recap</h2>
             <br/>
@@ -93,6 +105,7 @@ const MonthlyRecap = () =>{
         <p className='pl-10 text-xl'>Monthly Earnings: {result.amount}</p>
       </div>
       </div>
+    </div>
     </div>
     );
 

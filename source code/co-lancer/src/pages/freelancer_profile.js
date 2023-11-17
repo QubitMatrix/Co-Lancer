@@ -195,6 +195,15 @@ function FreelancerProfile()
 
     //Page rendered on freelancer profile
     return (
+      <div>
+        <div className='header'>
+            <button className='nav' onClick={()=>{navigate('/freelancer_profile',{state:{username:username}})}}>Profile</button>
+            <button className='nav' onClick={()=>{navigate('/projects',{state:{f_id:profile !== null? profile.freelancer_id : "",username:username}})}}>Explore</button>
+        
+        <div>
+            <button className='logout' onClick={()=>{navigate('/')}}>Log Out</button>
+        </div>
+        </div>
       <div id="freelancer_profile">
         <div className='f_details'>
           <div className='f_personal'>
@@ -227,12 +236,13 @@ function FreelancerProfile()
             {current_projects_arr}
           </div>
           <br/>
-          <Link className="Link" id="monthly_recap" to={`/monthly_recap`} state={{"f_id":profile !==null? profile.freelancer_id : ""}}>Monthly Projects Recap</Link>
-          <Link className="Link" id="reviews" to={`/reviews`} state={{"f_id":profile !== null? profile.freelancer_id : ""}}>Reviews and Feedback</Link> 
+          <Link className="Link" id="monthly_recap" to={`/monthly_recap`} state={{"f_id":profile !==null? profile.freelancer_id : "","username":username}}>Monthly Projects Recap</Link>
+          <Link className="Link" id="reviews" to={`/reviews`} state={{"f_id":profile !== null? profile.freelancer_id : "","username":username}}>Reviews and Feedback</Link> 
           <Link className="Link" id="view_projects" to ={`/projects`} state={{"f_id":profile !== null? profile.freelancer_id : ""}}>Explore Projects</Link>
           <br/><br/>
         </div>
         <br/> <br/>
+      </div>
       </div>
     );
 }

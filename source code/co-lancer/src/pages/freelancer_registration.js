@@ -1,7 +1,7 @@
 import '../App.css';
 import React, {useState, useEffect} from 'react'
 import ImageUpload from './image';
-import { useLocation } from 'react-router-dom';
+import { useLocation,useNavigate } from 'react-router-dom';
 import server_url from './endpoint'
 
 //Registration page extension, for freelancer
@@ -14,6 +14,7 @@ function RegisterFreelancer()
 
     //Access state details from previous component
     const {state} = useLocation();
+    const navigate=useNavigate()
     const username = state.username;
     inputs["username"] = username;
 
@@ -204,6 +205,12 @@ function RegisterFreelancer()
 
     //Page to be rendered on invoking the RegisterFreelancer component
     return (
+      <div>
+        <div className='header'>
+          <button className='nav' onClick={()=>navigate('/')}>Home</button>
+          <button className='nav' onClick={()=>{navigate('/login')}}>Log In</button>
+        </div>
+      
         <div className='reg_f_div'>
           <h1 className='text-4xl text-center pt-4'>Freelancer</h1><br/>
           <div className='f_form_div'>
@@ -242,6 +249,7 @@ function RegisterFreelancer()
             <br/>
           </form>
           </div>
+        </div>
         </div>
     );
 }

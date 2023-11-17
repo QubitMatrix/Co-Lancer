@@ -1,5 +1,5 @@
 import './App.css';
-import React, {useState, useEffect} from 'react'
+import React from 'react'
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import RegistrationForm from './pages/user_register';
 import RegisterFreelancer from './pages/freelancer_registration';
@@ -20,18 +20,24 @@ import Payment from './pages/payment'
 function App() 
 {
   //Home page
+
   class Home extends React.Component
   {
+    
     render()
     {
       return (
+        <div>
+          
         <div className='grid grid-cols-1 gap-4 place-items-center pt-44' id="home">
+          
           <h3 className='text-4xl font-bold place-self-center'>Colancer</h3>
           <p>Elevate Your Freelance Game With <b>CO-LANCER</b><br/><i>Collaborate To Thrive!!!</i></p>
           <div className='grid grid-cols-2 gap-4 place-items-center pt-10'>
             <button className='button' id="reg_button" onClick={()=>document.location="/register"}>Register</button>
           <button className='button' id="login_button" onClick={()=>document.location="/login"}>Login</button>
 </div>
+        </div>
         </div>
 
       )

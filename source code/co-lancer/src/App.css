@@ -8,6 +8,34 @@ body
   overflow: auto;
   height: 80%;
 }
+
+.header
+{
+  background-color: #f5883e;
+  height: 80px;
+  display: flex;
+}
+
+.nav
+{
+  margin-left: 40px;
+  margin-top: 5px;
+  width: 90px;
+  font-size: x-large;
+}
+
+.logout
+{
+  margin-left: 1000px;
+  margin-top: 20px;
+  width: 100px;
+  font-size: x-large;
+}
+
+.nav:active, .logout:active
+{
+  background-color: antiquewhite;
+}
 .button,.add_button,#submit_button,.submit_button,#chat_button
 {
   background-image:linear-gradient(to bottom right, #FA924C,#f9b486);

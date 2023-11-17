@@ -211,6 +211,15 @@ function ClientProfile()
 
     //Page rendered for client profile
     return (
+      <div>
+        <div className='header'>
+            <button className='nav' onClick={()=>{navigate('/client_profile',{state:{username:username}})}}>Profile</button>
+            <button className='nav' onClick={()=>{navigate('/create_project',{state:{username:username}})}}>New Project</button>
+        <div>
+            <button className='logout' onClick={()=>{navigate('/')}}>Log Out</button>
+        </div>
+        </div>
+      
         <div id="client_profile">
             <div id="details">
               <div id="c_profile">
@@ -233,6 +242,7 @@ function ClientProfile()
                 <button className="button" onClick={()=>navigate("/create_project", {state:{username:username}})}>Create New Project</button>
               </div>
             </div>
+        </div>
         </div>
     )
 }

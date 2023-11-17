@@ -1,7 +1,7 @@
 import '../App.css';
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 import FileUpload from './file';
-import { useLocation } from 'react-router-dom';
+import { useLocation,useNavigate } from 'react-router-dom';
 import server_url from './endpoint'
 
 function CreateProject()
@@ -11,6 +11,7 @@ function CreateProject()
 
     //use state from previous component
     const {state} = useLocation();
+    const navigate=useNavigate()
     inputs["username"] = state.username;
 
     const handleChange = (e) => {
@@ -62,7 +63,17 @@ function CreateProject()
     }
 
     //Page rendered for creating a new project
-    return(<div id="project_page">
+    return(
+      <div>
+        <div className='header'>
+            <button className='nav' onClick={()=>{navigate('/client_profile',{state:{username:inputs["username"]}})}}>Profile</button>
+        
+        <div>
+            <button className='logout' onClick={()=>{navigate('/')}}>Log Out</button>
+        </div>
+        </div>
+      
+    <div id="project_page">
             <form id="create_new_project" onSubmit={handleSubmit}>
                 <label>Title</label> <br/><input className='reg_input' type="text" name="title" value={inputs.title} placeholder="Project Title" onChange={handleChange} required /> <br/>
                 <label>Description</label> <br/> <input className='reg_input' type="textarea" name="description" value={inputs.description} placeholder="Project Description" onChange={handleChange} required /> <br/>
@@ -86,6 +97,7 @@ function CreateProject()
                 <FileUpload project_title={inputs.title} />
                 <br/><br/><br/>
             </div>
+        </div>
         </div>
     )
 }
