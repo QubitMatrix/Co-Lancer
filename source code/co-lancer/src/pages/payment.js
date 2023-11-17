@@ -14,8 +14,9 @@ const Payment=()=>{
     const [amount,setAmount]=useState([])
     const [result,setResult]=useState([])
 
-    const handleSubmit=async()=>
+    const handleSubmit=async(e)=>
     {
+        e.preventDefault();
         console.log("submit")
         console.log("mode:"+mode)
         console.log("amount:"+amount)
