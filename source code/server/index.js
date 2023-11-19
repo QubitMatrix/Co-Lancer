@@ -12,6 +12,7 @@ const upload = multer({ storage });
 let final_msg=null
 const PORT = 3000;
 app.use(cors());
+app.options('*',cors());
 app.use(express.json());
 
 var http = require('http').Server(app);
@@ -269,7 +270,7 @@ app.post("/register_client", (req, res) => {
 
 //Route for authentication
 app.post("/authenticate", (req, res) => {
-    const password = req.body.password;
+        const password = req.body.password;
     const username = req.body.username;
     console.log(validate.validate_password(password)+" "+validate.validate_username(username,30))
     if(validate.validate_password(password) && validate.validate_username(username,30))
@@ -812,10 +813,7 @@ app.post('/monthly_recap',(req,res)=>{
                         console.log(amount)
                         res.json({"month_proj":month_proj[0],"total":total_proj[0],"in_progress":in_progress[0],"completed":comp[0],"amount":amount});
                     })
-                
-                   
                 })
-
             })
         })
     })
@@ -837,20 +835,21 @@ app.post('/payment',(req,res)=>{
     console.log(time)
     console.log("in index:"+username+" "+pid+" "+mode+" "+amount)
     q1="SELECT payment_count FROM counter;"
-    db_client.query(q1,(err,res)=>{
+    db_client.query(q1,(err,result)=>{
         if (err) throw err;
-        const val=res.map(row=>row.payment_count)
+        const val=result.map(row=>row.payment_count)
         const payid="PAY"+val
         console.log(payid)
         q2="INSERT INTO payment VALUES('"+payid+"','"+pid+"','"+currentDate+"','"+currentDate+" "+time+"','Successful',"+amount+",'"+mode+"');"
         console.log(q2)
-        db_client.query(q2,(err,res)=>{
+        db_client.query(q2,(err,result)=>{
             if(err) throw err;
             console.log("yay")
             q3="UPDATE counter SET payment_count=payment_count+1;"
-            db_client.query(q3,(err,res)=>{
+            db_client.query(q3,(err,result)=>{
                 if(err) throw err;
                 console.log("updated counter")
+                res.json({"Message":"Payment succcessful"})
             })
         })
     })

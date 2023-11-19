@@ -67,7 +67,7 @@ function Review()
 
         for(let i=0;i<client_IDs.length;i++)
         {
-            review_arr.push(<li> <div className='review_card'> <b>{client_IDs[i]} </b> <br/> {reviews[i]} <br/>Cookies: {ratings[i]} </div></li>)
+            review_arr.push(<li> <div className='review_card'> <b>{client_IDs[i]} </b> <br/> {reviews[i]} <br/>Rating: {ratings[i]} </div></li>)
         }
         console.log("no. of reviews"+review_arr.length)
     }

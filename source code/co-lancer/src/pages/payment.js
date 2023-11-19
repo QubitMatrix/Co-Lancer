@@ -74,7 +74,7 @@ const Payment=()=>{
     </select>
     <br/> <br/>
     <label>Amount Paid</label>
-    <input className='amount' type="text" onChange={handleChange}/>
+    <input className='amount' type="number" onChange={handleChange}/>
     <br/> <br/>
     <button className='pay-submit' type="submit">Submit</button>
             </form>
