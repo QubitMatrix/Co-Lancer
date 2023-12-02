@@ -29,22 +29,26 @@ function App()
       return (
         <div>
           
+        <section id="data_warning">
+          <p>This website is currently a sample project undergoing testing. For your safety, please use fake data instead of real information while interacting with the platform. We cannot guarantee the security of personal information at this stage.</p>
+        </section>
         <div className='grid grid-cols-1 gap-4 place-items-center pt-44' id="home">
           
           <h3 className='text-4xl font-bold place-self-center'>Colancer</h3>
-          <p>Elevate Your Freelance Game With <b>CO-LANCER</b><br/><i>Collaborate To Thrive!!!</i></p>
+          <p style={{'font-size':'larger'}}>Elevate Your Freelance Game With <b>CO-LANCER</b><br/><i>Collaborate To Thrive!!!</i></p>
           <div className='grid grid-cols-2 gap-4 place-items-center pt-10'>
             <button className='button' id="reg_button" onClick={()=>document.location="/register"}>Register</button>
-          <button className='button' id="login_button" onClick={()=>document.location="/login"}>Login</button>
-</div>
+            <button className='button' id="login_button" onClick={()=>document.location="/login"}>Login</button>
+          </div>
         </div>
+        <section id="footer">&copy;2023 Colancer <br/><img id="github-img" src="https://img.icons8.com/material-outlined/48/null/github.png" alt="github icon"/><a href="https://github.com/QubitMatrix/Co-Lancer">Source code</a></section>
         </div>
 
       )
     }
   }
 
-
+  
   
   //Main return which renders, calls and routes the components on running npm start
   return (

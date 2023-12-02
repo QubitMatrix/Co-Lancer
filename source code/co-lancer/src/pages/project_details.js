@@ -32,7 +32,8 @@ function ProjectDetails()
     aggregate(project_state[8]? project_state[8].split(",") : [],freelancers_arr);
     
     //Page rendered for project_details
-    return(<div className='project-dets'>
+    return(<div>
+        <div className='project-dets'>
         <h2>{project_state[1]}</h2>
         <button id="view_pdf" onClick={()=>{navigate("/project_pdf", {state:{title:project_state[1]}})}}>View PDF</button><br/>
         <h3>Description</h3>
@@ -51,6 +52,8 @@ function ProjectDetails()
         <ul>
             <li>{freelancers_arr}</li>
         </ul>
+    </div>
+    <section id="footer">&copy;2023 Colancer <br/><img id="github-img" src="https://img.icons8.com/material-outlined/48/null/github.png" alt="github icon"/><a href="https://github.com/QubitMatrix/Co-Lancer">Source code</a></section>
     </div>)
 }
 

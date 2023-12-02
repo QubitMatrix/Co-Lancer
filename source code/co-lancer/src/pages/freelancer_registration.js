@@ -250,6 +250,7 @@ function RegisterFreelancer()
           </form>
           </div>
         </div>
+        <section id="footer">&copy;2023 Colancer <br/><img id="github-img" src="https://img.icons8.com/material-outlined/48/null/github.png" alt="github icon"/><a href="https://github.com/QubitMatrix/Co-Lancer">Source code</a></section>
         </div>
     );
 }

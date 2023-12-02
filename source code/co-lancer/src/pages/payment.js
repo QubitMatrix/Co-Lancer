@@ -67,18 +67,19 @@ const Payment=()=>{
             <form onSubmit={handleSubmit} className='align-center pl-20'>
                 <label>Payment Mode</label>
                 <select id="Dropdown" onChange={handleDropdownChange}>
-                <option value="">Select an option</option>
-        <option value="upi">UPI</option>
-        <option value="credit/debit card">Credit/Debit Card</option>
-        <option value="netbanking">Net Banking</option>
-    </select>
-    <br/> <br/>
-    <label>Amount Paid</label>
-    <input className='amount' type="number" onChange={handleChange}/>
-    <br/> <br/>
-    <button className='pay-submit' type="submit">Submit</button>
+                  <option value="">Select an option</option>
+                  <option value="upi">UPI</option>
+                  <option value="credit/debit card">Credit/Debit Card</option>
+                  <option value="netbanking">Net Banking</option>
+                </select>
+                <br/> <br/>
+                <label>Amount Paid</label>
+                <input className='amount' type="number" onChange={handleChange}/>
+                <br/> <br/>
+                <button className='pay-submit' type="submit">Submit</button>
             </form>
             <br/>
+            <section id="footer">&copy;2023 Colancer <br/><img id="github-img" src="https://img.icons8.com/material-outlined/48/null/github.png" alt="github icon"/><a href="https://github.com/QubitMatrix/Co-Lancer">Source code</a></section>
         </div>
     )
 

@@ -69,6 +69,9 @@ function Login()
           <button className='nav' onClick={()=>navigate('/')}>Home</button>
           <button className='nav' onClick={()=>{navigate('/register')}}>Register</button>
         </div>
+        <section id="data_warning">
+          <p>This website is currently a sample project undergoing testing. For your safety, please use fake data instead of real information while interacting with the platform. We cannot guarantee the security of personal information at this stage.</p>
+        </section>
     
       <div id="login">
         
@@ -84,6 +87,7 @@ function Login()
           </form>
         </div>
       </div>
+      <section id="footer">&copy;2023 Colancer <br/><img id="github-img" src="https://img.icons8.com/material-outlined/48/null/github.png" alt="github icon"/><a href="https://github.com/QubitMatrix/Co-Lancer">Source code</a></section>
       </div>
     )
 }

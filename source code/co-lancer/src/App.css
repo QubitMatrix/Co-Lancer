@@ -375,3 +375,40 @@ li
   border-radius: 18px;
   height: 40px;
 }
+
+#data_warning
+{
+  position:fixed;
+  margin-left:3%;
+  margin-right:3%;
+  margin-top: 1%;
+  background-color:orangered;
+  font-size:large;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+#footer
+{
+  position: fixed;
+  bottom: 0%;
+  background-color: #f5883e;
+  width: 100%;
+  text-align: center;
+}
+
+a
+{
+  text-decoration: underline;
+}
+
+#github-img
+{
+  display: inline;
+  width: 30px;
+}
+
+.header
+{
+  position: sticky;
+  top:0%;
+}
