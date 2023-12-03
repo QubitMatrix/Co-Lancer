@@ -1,8 +1,7 @@
 //PAYMENTS
 import '../App.css';
-import React, {useState, useEffect} from 'react'
-import { Link } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import React, {useState} from 'react'
+import { useLocation, useNavigate } from 'react-router-dom';
 import server_url from './endpoint'
 
 const Payment=()=>{
@@ -12,7 +11,9 @@ const Payment=()=>{
     console.log("pay:"+username+pid)
     const [mode,setMode]=useState([])
     const [amount,setAmount]=useState([])
-    const [result,setResult]=useState([])
+    
+    //navigate object
+    const navigate = useNavigate();
 
     const handleSubmit=async(e)=>
     {
@@ -57,11 +58,18 @@ const Payment=()=>{
         const dropdown=document.getElementById("Dropdown").value
         //const data=dropdown.value
         console.log("mode chosen:"+dropdown)
-        if (dropdown!='')
+        if (dropdown!=='')
         setMode(dropdown)
     }
 
     return(
+      <div>
+        <div className='header'>
+            <button className='nav' onClick={()=>{navigate('/client_profile',{state:{username:username}})}}>Profile</button>
+            <div>
+                <button className='logout' onClick={()=>{navigate('/')}}>Log Out</button>
+            </div>
+        </div>
         <div className='payment-div'>
             <br/>
             <form onSubmit={handleSubmit} className='align-center pl-20'>
@@ -79,7 +87,8 @@ const Payment=()=>{
                 <button className='pay-submit' type="submit">Submit</button>
             </form>
             <br/>
-            <section id="footer">&copy;2023 Colancer <br/><img id="github-img" src="https://img.icons8.com/material-outlined/48/null/github.png" alt="github icon"/><a href="https://github.com/QubitMatrix/Co-Lancer">Source code</a></section>
+        </div>
+        <section id="footer">&copy;2023 Colancer <br/><img id="github-img" src="https://img.icons8.com/material-outlined/48/null/github.png" alt="github icon"/><a href="https://github.com/QubitMatrix/Co-Lancer">Source code</a></section>
         </div>
     )
 
